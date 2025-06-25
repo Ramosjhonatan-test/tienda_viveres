@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, session, redirect, url_for, flash, request
+from flask import Blueprint, render_template, session, redirect, url_for, flash, request, jsonify
 from models.producto import Producto
 from models.direccion import Direccion
 
 cliente_bp = Blueprint('cliente', __name__, url_prefix='/cliente')
 
+# Página de inicio para clientes
 @cliente_bp.route('/inicio')
 def inicio():
     if session.get('rol') != 'cliente':
@@ -13,7 +14,7 @@ def inicio():
     productos = Producto.query.all()
     return render_template('cliente/inicio.html', productos=productos)
 
-# ✅ Mostrar formulario para agregar dirección
+# Mostrar formulario para agregar dirección
 @cliente_bp.route('/direccion/agregar')
 def agregar_direccion():
     if session.get('rol') != 'cliente':
@@ -22,7 +23,7 @@ def agregar_direccion():
     
     return render_template('cliente/agregar_direccion.html')
 
-# ✅ Guardar nueva dirección con coordenadas
+# Guardar nueva dirección
 @cliente_bp.route('/direccion/guardar', methods=['POST'])
 def guardar_direccion():
     if session.get('rol') != 'cliente' or 'id' not in session:
@@ -49,3 +50,35 @@ def guardar_direccion():
 
     flash('Dirección guardada con éxito.', 'success')
     return redirect(url_for('carrito.index'))
+
+# Buscador tradicional (con recarga)
+@cliente_bp.route('/buscar')
+def inicio_busqueda():
+    termino = request.args.get('q', '').strip()
+
+    if not termino:
+        return render_template('cliente/inicio.html', productos=[])
+
+    productos = Producto.query.filter(Producto.nombre.ilike(f'%{termino}%')).all()
+    return render_template('cliente/inicio.html', productos=productos)
+
+# Buscador en vivo (API que devuelve JSON)
+@cliente_bp.route('/api/buscar')
+def api_buscar_productos():
+    termino = request.args.get('q', '').strip()
+
+    if not termino:
+        productos = Producto.query.limit(20).all()
+    else:
+        productos = Producto.query.filter(Producto.nombre.ilike(f'%{termino}%')).all()
+
+    productos_json = [{
+        'id': p.id,
+        'nombre': p.nombre,
+        'descripcion': p.descripcion,
+        'precio': float(p.precio),
+        'stock': p.stock,
+        'imagen': p.imagen
+    } for p in productos]
+
+    return jsonify(productos_json)

@@ -86,11 +86,16 @@
   <!-- Título y contador -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 id="productos" class="fw-bold text-neon">Nuestros Productos</h3>
-    <span class="badge bg-light text-dark rounded-pill px-3 py-2 shadow-sm">
+    <span id="contador-resultados" class="badge bg-light text-dark rounded-pill px-3 py-2 shadow-sm">
       <i class="fas fa-box-open me-1"></i> {{ productos|length }} disponibles
     </span>
   </div>
-
+  <form action="{{ url_for('cliente.inicio_busqueda') }}" method="get" class="input-group mb-4" style="max-width: 500px;">
+  <input type="text" id="buscador" class="form-control bg-dark text-white mb-4" placeholder="Buscar producto..." autocomplete="off">
+  <button class="btn btn-glow" type="submit"stile="border-radius: 0 20px 20px 0; min-height: 38px;">
+    <i class="fas fa-search"></i>
+  </button>
+</form>
   <!-- Catálogo -->
   <div class="row g-4">
     {% for p in productos %}
@@ -155,5 +160,70 @@
     });
   });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input = document.getElementById('buscador');
+  const contenedor = document.querySelector('.row.g-4');
+  const contador = document.getElementById('contador-resultados');
+
+  input.addEventListener('input', () => {
+    const query = input.value.trim();
+    fetch(`/cliente/api/buscar?q=${encodeURIComponent(query)}`)
+      .then(res => res.json())
+      .then(data => {
+        // 🟢 Actualizar contador
+        if (contador) {
+          contador.innerHTML = `
+            <i class="fas fa-box-open me-1"></i> ${data.length} disponible${data.length === 1 ? '' : 's'}
+          `;
+        }
+
+        // 🔄 Limpiar productos anteriores
+        contenedor.innerHTML = '';
+
+        if (data.length === 0) {
+          contenedor.innerHTML = '<p class="text-white text-center w-100">No se encontraron productos.</p>';
+          return;
+        }
+
+        // 🧱 Agregar productos nuevos
+        data.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'col-md-4 col-lg-3';
+          card.innerHTML = `
+            <div class="card glass-card h-100">
+              <div class="product-image-container p-3" style="height: 200px; display: flex; justify-content: center; align-items: center;">
+                <img src="${p.imagen}" alt="${p.nombre}" class="img-fluid" style="max-height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';">
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title fw-bold">${p.nombre}</h5>
+                <p class="card-text text-muted small">${p.descripcion || 'Sin descripción'}</p>
+                <span class="fs-5 fw-bold mb-2">Bs ${p.precio.toFixed(2)}</span>
+                <span class="badge bg-light text-dark mb-3"><i class="fas fa-cubes me-1"></i> ${p.stock} en stock</span>
+                <form action="/carrito/agregar" method="post" class="d-flex align-items-center gap-2 mt-auto">
+                  <input type="hidden" name="producto_id" value="${p.id}">
+                  <input type="number" name="cantidad" value="1" min="1" max="${p.stock}" class="form-control form-control-sm bg-dark text-white border-0" style="width: 80px;" ${p.stock === 0 ? 'disabled' : ''}>
+                  <button type="submit" class="btn btn-glow btn-sm flex-grow-1" ${p.stock === 0 ? 'disabled' : ''}>
+                    <i class="fas fa-cart-plus me-1"></i> Añadir
+                  </button>
+                </form>
+              </div>
+            </div>
+          `;
+          contenedor.appendChild(card);
+        });
+      })
+      .catch(error => {
+        console.error("Error al buscar productos:", error);
+        contenedor.innerHTML = '<p class="text-white text-center w-100">Hubo un error al buscar productos.</p>';
+        if (contador) {
+          contador.innerHTML = `<i class="fas fa-box-open me-1"></i> 0 disponibles`;
+        }
+      });
+  });
+});
+</script>
+
+
 
 {% endblock %}
