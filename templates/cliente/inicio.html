@@ -96,6 +96,13 @@
     <i class="fas fa-search"></i>
   </button>
 </form>
+<div class="d-flex flex-wrap gap-2 mb-4">
+  <button class="btn btn-outline-light btn-sm categoria-btn active" data-id="0">Todos</button>
+  {% for c in categorias %}
+    <button class="btn btn-outline-light btn-sm categoria-btn" data-id="{{ c.id }}">{{ c.nombre }}</button>
+  {% endfor %}
+</div>
+
   <!-- Catálogo -->
   <div class="row g-4">
     {% for p in productos %}
@@ -219,6 +226,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (contador) {
           contador.innerHTML = `<i class="fas fa-box-open me-1"></i> 0 disponibles`;
         }
+      });
+  });
+});
+</script>
+<script>
+document.querySelectorAll('.categoria-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const id = btn.getAttribute('data-id');
+
+    // Toggle visual
+    document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    // Buscar productos por categoría
+    fetch(`/cliente/api/filtrar_categoria?id=${id}`)
+      .then(res => res.json())
+      .then(data => {
+        const contenedor = document.querySelector('.row.g-4');
+        const contador = document.getElementById('contador-resultados');
+
+        // Actualizar contador
+        if (contador) {
+          contador.innerHTML = `
+            <i class="fas fa-box-open me-1"></i> ${data.length} disponible${data.length === 1 ? '' : 's'}
+          `;
+        }
+
+        // Mostrar productos
+        contenedor.innerHTML = '';
+        if (data.length === 0) {
+          contenedor.innerHTML = '<p class="text-white text-center w-100">No hay productos en esta categoría.</p>';
+          return;
+        }
+
+        data.forEach(p => {
+          const card = document.createElement('div');
+          card.className = 'col-md-4 col-lg-3';
+          card.innerHTML = `...`; // igual al render del buscador
+          contenedor.appendChild(card);
+        });
       });
   });
 });

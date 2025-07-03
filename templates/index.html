@@ -10,7 +10,7 @@
     <div class="row align-items-center">
       <div class="col-lg-12 text-center" data-aos="zoom-in">
         <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">Tu tienda en línea <span class="text-warning animate__animated animate__pulse animate__infinite animate__slower">24/7</span></h1>
-        <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Productos frescos, despacho rápido y la mejor calidad directamente a tu hogar.</p>
+        <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Encuentra los mejores champús, calidad garantizada y entrega rápida a tu hogar.</p>
         <a href="{{ url_for('usuario.login') }}" class="btn btn-light btn-lg hvr-grow animate__animated animate__fadeInUp animate__delay-2s">
           <i class="fas fa-shopping-basket me-2"></i> Comprar ahora
         </a>
@@ -18,15 +18,14 @@
     </div>
   </section>
 
-  <!-- Categorías Mejoradas -->
-  <section id="categorias" class="mb-5">
+  <!-- <section id="categorias" class="mb-5">
     <div class="text-center mb-5" data-aos="fade-up">
       <h2 class="fw-bold mb-3 display-5">¿Qué necesitas hoy?</h2>
       <p class="lead text-muted">Explora nuestras categorías y encuentra todo para tu hogar</p>
     </div>
 
     <div class="row g-4">
-      <!-- Categoría Frutas -->
+
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
         <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
           <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
@@ -45,7 +44,7 @@
         </div>
       </div>
 
-      <!-- Categoría Lácteos -->
+
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
         <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
           <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
@@ -64,7 +63,7 @@
         </div>
       </div>
 
-      <!-- Categoría Bebidas -->
+
       <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
         <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
           <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
@@ -83,7 +82,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
 
   <!-- Productos destacados Mejorados -->
   <section class="mb-5">
@@ -97,15 +96,15 @@
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
         <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
           <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/apple.png') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Manzanas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
+            <img src="{{ url_for('static', filename='img/alow.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Manzanas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
           </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold">Manzanas Red Delicious</h5>
-            <p class="text-muted small">Frutas Frescas</p>
+            <h5 class="card-title fw-bold">Jaboncillo de Aloe Vera</h5>
+            <p class="text-muted small">JABONCILLO</p>
             <p class="text-success fw-bold mb-3 fs-5">Bs 8.50/kg</p>
-            <button class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
+            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
               Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -114,15 +113,15 @@
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
         <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
           <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/leche.png') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Leche" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
+            <img src="{{ url_for('static', filename='img/arroz.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Leche" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
           </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold">Leche Entera 1L</h5>
-            <p class="text-muted small">Lácteos</p>
+            <h5 class="card-title fw-bold">Jaboncillo de Arroz</h5>
+            <p class="text-muted small">JABONCILLO</p>
             <p class="text-success fw-bold mb-3 fs-5">Bs 6.20</p>
-            <button class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
+            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
               Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -131,15 +130,15 @@
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
         <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
           <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/detergente.png') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Detergente" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
+            <img src="{{ url_for('static', filename='img/romero.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Detergente" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
           </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold">Detergente Líquido</h5>
-            <p class="text-muted small">Hogar y Limpieza</p>
+            <h5 class="card-title fw-bold">Champú de Romero</h5>
+            <p class="text-muted small text-uppercase">CHAMPÚ</p>
             <p class="text-success fw-bold mb-3 fs-5">Bs 12.80</p>
-            <button class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
+            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
               Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </button>
+            </a>
           </div>
         </div>
       </div>
@@ -148,15 +147,15 @@
       <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
         <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
           <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/bananas.png') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Bananas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
+            <img src="{{ url_for('static', filename='img/manzanilla.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Bananas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
           </div>
           <div class="card-body">
-            <h5 class="card-title fw-bold">Bananas</h5>
-            <p class="text-muted small">Frutas Frescas</p>
+            <h5 class="card-title fw-bold">Jaboncillo de Manzanilla</h5>
+            <p class="text-muted small text-uppercase">JABONCILLO </p>
             <p class="text-success fw-bold mb-3 fs-5">Bs 5.30/kg</p>
-            <button class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
+            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
               Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </button>
+            </a>
           </div>
         </div>
       </div>

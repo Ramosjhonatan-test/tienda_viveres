@@ -82,3 +82,21 @@ def api_buscar_productos():
     } for p in productos]
 
     return jsonify(productos_json)
+
+@cliente_bp.route('/api/filtrar_categoria')
+def api_filtrar_categoria():
+    id_cat = request.args.get('id', type=int)
+    
+    if not id_cat or id_cat == 0:
+        productos = Producto.query.limit(20).all()
+    else:
+        productos = Producto.query.filter_by(categoria_id=id_cat).all()
+
+    return jsonify([{
+        'id': p.id,
+        'nombre': p.nombre,
+        'descripcion': p.descripcion,
+        'precio': float(p.precio),
+        'stock': p.stock,
+        'imagen': p.imagen
+    } for p in productos])
