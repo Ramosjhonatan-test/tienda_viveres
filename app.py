@@ -9,6 +9,10 @@ from models.carrito import Carrito
 from models.direccion import Direccion
 from datetime import datetime
 import pytz
+from dotenv import load_dotenv
+
+# Cargar variables de entorno desde .env
+load_dotenv()
 
 # Controladores
 from controllers import usuario_controller
@@ -33,19 +37,25 @@ la_paz = pytz.timezone('America/La_Paz')
 ahora = datetime.now(la_paz)
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "supersecreto"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "supersecreto_dev")
 
-# 👉 Base de datos PostgreSQL
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://bd_tienda_online_user:Jae0pZfKDU5OGGmmjZwzW4CwLBUNpEpR@dpg-d1e50n6mcj7s73b2ljgg-a.oregon-postgres.render.com/bd_tienda_online"
+# 👉 Configuración de Base de Datos (usando .env)
+db_user = os.getenv("DB_USER", "postgres")
+db_pass = os.getenv("DB_PASSWORD", "1522")
+db_host = os.getenv("DB_HOST", "localhost")
+db_port = os.getenv("DB_PORT", "5432")
+db_name = os.getenv("DB_NAME", "tienda_viveres")
+
+app.config["SQLALCHEMY_DATABASE_URI"] = f"postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}?client_encoding=utf8"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 # Correo
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'ramosjhonatan659@gmail.com'
-app.config['MAIL_PASSWORD'] = 'ledx byup nooa ffpb'
-app.config['MAIL_DEFAULT_SENDER'] = 'ramosjhonatan659@gmail.com'
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
 
 # Inicialización
 mail.init_app(app)
@@ -91,6 +101,7 @@ def home():
 # Ejecución local
 if __name__ == "__main__":
     with app.app_context():
+        print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"])
         db.create_all()
 
         if not Usuario.query.filter_by(username='admin').first():
