@@ -3,7 +3,10 @@ from models.pedido import Pedido
 from database import db
 from flask_mail import Message
 from extensions import mail
-from flask import current_app
+from flask import current_app, make_response
+import io
+from xhtml2pdf import pisa
+from models.detalle_pedido import DetallePedido
 
 
 admin_pedido_bp = Blueprint('admin_pedido', __name__, url_prefix='/admin/pedidos')
@@ -40,7 +43,7 @@ def enviar_factura_por_correo(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
 
     if not pedido.usuario.correo or not pedido.factura:
-        flash('No se puede enviar el correo: faltan datos del cliente o la factura.', 'warning')
+        flash('No se puede enviar el correo: faltan datos del cliente o la factura no ha sido generada.', 'warning')
         return redirect(url_for('admin_pedido.detalle', pedido_id=pedido_id))
 
     try:
@@ -72,3 +75,30 @@ def enviar_factura_por_correo(pedido_id):
 
     return redirect(url_for('admin_pedido.detalle', pedido_id=pedido_id))
 
+@admin_pedido_bp.route('/generar-factura/<int:pedido_id>')
+def generar_factura(pedido_id):
+    from utils.generador_pdf import generar_y_guardar_factura
+    pedido = Pedido.query.get_or_404(pedido_id)
+    
+    if not pedido.factura:
+        generar_y_guardar_factura(pedido)
+        flash('Comprobante generado correctamente.', 'success')
+    else:
+        flash('El comprobante ya estaba generado.', 'info')
+        
+    return redirect(url_for('admin_pedido.detalle', pedido_id=pedido_id))
+
+
+@admin_pedido_bp.route('/ticket/<int:pedido_id>')
+def ver_ticket(pedido_id):
+    pedido = Pedido.query.get_or_404(pedido_id)
+    detalles = DetallePedido.query.filter_by(pedido_id=pedido.id).all()
+    html = render_template('pdf/pedido_ticket.html', pedido=pedido, detalles=detalles)
+
+    result = io.BytesIO()
+    pisa.CreatePDF(io.StringIO(html), dest=result)
+
+    response = make_response(result.getvalue())
+    response.headers["Content-Type"] = "application/pdf"
+    response.headers["Content-Disposition"] = f"inline; filename=ticket_{pedido.id}.pdf"
+    return response

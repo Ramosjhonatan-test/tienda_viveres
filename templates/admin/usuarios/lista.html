@@ -2,59 +2,60 @@
 {% block title %}Gestión de Usuarios{% endblock %}
 {% block content %}
 
-<h2 class="mb-4">👥 Gestión de Usuarios</h2>
-
-<div class="table-responsive animate__animated animate__fadeInUp">
-  <table class="table table-dark table-hover data-table">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Usuario</th>
-        <th>Correo</th>
-        <th>Celular</th>
-        <th>Rol</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for usuario in usuarios %}
-      <tr>
-        <td>{{ usuario.id }}</td>
-        <td>{{ usuario.nombre }}</td>
-        <td>{{ usuario.username }}</td>
-        <td>{{ usuario.correo or 'N/D' }}</td>
-        <td>{{ usuario.celular or 'N/D' }}</td>
-        <td>{{ usuario.rol|capitalize }}</td>
-        <td>
-          <a href="{{ url_for('admin.editar_usuario', id=usuario.id) }}" class="btn btn-sm btn-outline-warning me-2">
-            <i class="fas fa-edit"></i>
-          </a>
-          <a href="#" onclick="confirmDelete('{{ usuario.id }}')" class="btn btn-sm btn-outline-danger">
-            <i class="fas fa-trash-alt"></i>
-          </a>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="mb-8 flex items-center justify-between" data-aos="fade-down">
+    <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400">
+            <i class="fas fa-users text-xl"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Gestión de Usuarios</h2>
+    </div>
 </div>
 
-<script>
-  function confirmDelete(id) {
-    Swal.fire({
-      title: '¿Eliminar usuario?',
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        window.location.href = `/admin/usuarios/eliminar/${id}`;
-      }
-    });
-  }
-</script>
+<div class="bg-adminCard rounded-3xl p-6 border border-slate-700 shadow-2xl relative overflow-hidden" data-aos="fade-up">
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse data-table text-sm">
+            <thead>
+                <tr class="border-b border-slate-700">
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">ID</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">Nombre</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">Usuario</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">Correo</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">Celular</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider">Rol</th>
+                    <th class="py-4 px-4 font-bold text-slate-400 uppercase tracking-wider text-right">Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-700/50">
+                {% for usuario in usuarios %}
+                <tr class="hover:bg-slate-800/50 transition-colors">
+                    <td class="py-3 px-4 text-slate-300 font-medium">#{{ usuario.id }}</td>
+                    <td class="py-3 px-4 flex items-center">
+                        <img src="https://ui-avatars.com/api/?name={{ usuario.nombre }}&background=random" class="w-8 h-8 rounded-full mr-3 shadow-md border border-slate-600">
+                        <span class="text-white font-bold">{{ usuario.nombre }}</span>
+                    </td>
+                    <td class="py-3 px-4 text-emerald-400 font-medium pt-5">@{{ usuario.username }}</td>
+                    <td class="py-3 px-4 text-slate-400 pt-5">{{ usuario.correo or 'N/D' }}</td>
+                    <td class="py-3 px-4 text-slate-400 pt-5">{{ usuario.celular or 'N/D' }}</td>
+                    <td class="py-3 px-4 pt-5">
+                        <span class="px-2 py-1 rounded-lg text-xs font-bold {{ 'bg-indigo-500/20 text-indigo-400' if usuario.rol == 'admin' else 'bg-slate-700 text-slate-300' }}">
+                            {{ usuario.rol|capitalize }}
+                        </span>
+                    </td>
+                    <td class="py-3 px-4 text-right pt-5">
+                        <a href="{{ url_for('admin.editar_usuario', id=usuario.id) }}" class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-white transition-colors mr-2">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button onclick="confirmAction('¿Eliminar usuario?', 'Esta acción no se puede deshacer', () => window.location.href=`/admin/usuarios/eliminar/{{ usuario.id }}`)" class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-rose-500/10 text-rose-500 hover:bg-rose-500 hover:text-white transition-colors">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

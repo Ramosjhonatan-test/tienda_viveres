@@ -6,7 +6,15 @@ import views.producto_view as producto_view
 
 producto_bp = Blueprint('producto', __name__, url_prefix='/productos')
 
-@producto_bp.route('/')
+@producto_bp.route('/', endpoint='lista')
+def lista():
+    if session.get('rol') != 'admin':
+        return redirect(url_for('cliente.inicio'))
+    
+    productos = Producto.query.all()
+    return producto_view.index(productos)
+
+@producto_bp.route('/admin-list', endpoint='index')
 def index():
     if session.get('rol') != 'admin':
         flash('Acceso no autorizado.', 'danger')
@@ -17,12 +25,14 @@ def index():
 
 @producto_bp.route('/nuevo')
 def nuevo():
+    if session.get('rol') != 'admin': return redirect(url_for('usuario.login'))
     categorias = Categoria.query.all()
     proveedores = Proveedor.query.all()
     return producto_view.nuevo(categorias, proveedores)
 
 @producto_bp.route('/guardar', methods=['POST'])
 def guardar():
+    if session.get('rol') != 'admin': return redirect(url_for('usuario.login'))
     data = request.form
     nuevo = Producto(
         nombre=data['nombre'],
@@ -39,6 +49,7 @@ def guardar():
 
 @producto_bp.route('/editar/<int:id>')
 def editar(id):
+    if session.get('rol') != 'admin': return redirect(url_for('usuario.login'))
     producto = Producto.query.get(id)
     if not producto:
         flash('Producto no encontrado.', 'danger')
@@ -49,6 +60,7 @@ def editar(id):
 
 @producto_bp.route('/actualizar/<int:id>', methods=['POST'])
 def actualizar(id):
+    if session.get('rol') != 'admin': return redirect(url_for('usuario.login'))
     producto = Producto.query.get(id)
     if not producto:
         flash('Producto no encontrado.', 'danger')
@@ -69,6 +81,7 @@ def actualizar(id):
 
 @producto_bp.route('/eliminar/<int:id>')
 def eliminar(id):
+    if session.get('rol') != 'admin': return redirect(url_for('usuario.login'))
     producto = Producto.query.get(id)
     if producto:
         producto.delete()
@@ -80,4 +93,4 @@ def eliminar(id):
 @producto_bp.route('/detalle/<int:id>', endpoint='detalle_cliente')
 def detalle_cliente(id):
     producto = Producto.query.get_or_404(id)
-    return render_template('cliente/detalle.html', producto=producto)
+    return render_template('productos/detalle.html', producto=producto)

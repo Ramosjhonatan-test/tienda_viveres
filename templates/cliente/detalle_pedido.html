@@ -1,382 +1,129 @@
 {% extends 'base_cliente.html' %}
-{% block title %}Detalle del Pedido #{{ pedido.id }}{% endblock %}
-
+{% block title %}Detalle Pedido #{{ pedido.id }}{% endblock %}
 {% block content %}
-<div class="container py-4" data-aos="fade-up">
-  <!-- Encabezado con diseño mejorado -->
-  <div class="text-center mb-5">
-    <div class="d-flex flex-column align-items-center">
-      <h1 class="display-5 fw-bold text-dark mb-3">
-        <i class="fas fa-receipt me-2 text-primary"></i>DETALLE DEL PEDIDO #{{ pedido.id }}
-      </h1>
-      <div class="order-status-badge position-relative">
-        <span class="badge rounded-pill fs-6 py-2 px-3 
-          {% if pedido.estado == 'pendiente' %}bg-warning text-dark
-          {% elif pedido.estado == 'enviado' %}bg-info text-white
-          {% elif pedido.estado == 'entregado' %}bg-success text-white
-          {% else %}bg-danger text-white{% endif %} shadow-sm">
-          <i class="fas 
-            {% if pedido.estado == 'pendiente' %}fa-hourglass-half
-            {% elif pedido.estado == 'enviado' %}fa-truck-fast
-            {% elif pedido.estado == 'entregado' %}fa-circle-check
-            {% else %}fa-triangle-exclamation{% endif %} me-1"></i>
-          {{ pedido.estado|upper }}
-        </span>
-        <span class="position-absolute top-0 start-100 translate-middle p-1 bg-{% if pedido.estado == 'pendiente' %}warning{% elif pedido.estado == 'enviado' %}info{% elif pedido.estado == 'entregado' %}success{% else %}danger{% endif %} border border-2 border-white rounded-circle"></span>
-      </div>
-    </div>
-  </div>
 
-  <!-- Tarjeta de información principal -->
-  <div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden">
-    <div class="card-body p-4">
-      <div class="row g-4">
-        <!-- Información del pedido -->
-        <div class="col-lg-6">
-          <div class="info-card h-100">
-            <div class="d-flex align-items-center mb-3">
-              <div class="icon-circle bg-primary-light me-3">
-                <i class="fas fa-info-circle text-primary fs-4"></i>
-              </div>
-              <h4 class="mb-0 fw-semibold text-dark">Información del Pedido</h4>
-            </div>
-            
-            <div class="info-grid">
-              <div class="info-item bg-light rounded-3 p-3">
-                <div class="icon-circle-sm bg-primary text-white me-2">
-                  <i class="fas fa-calendar-alt"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Fecha</small>
-                  <span class="fw-semibold">{{ pedido.fecha.strftime('%d/%m/%Y') }}</span>
-                </div>
-              </div>
-              
-              <div class="info-item bg-light rounded-3 p-3">
-                <div class="icon-circle-sm bg-primary text-white me-2">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Hora</small>
-                  <span class="fw-semibold">{{ pedido.fecha.strftime('%H:%M') }}</span>
-                </div>
-              </div>
-              
-              <div class="info-item bg-light rounded-3 p-3">
-                <div class="icon-circle-sm bg-primary text-white me-2">
-                  <i class="fas fa-money-bill-wave"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Total</small>
-                  <span class="fw-semibold">Bs {{ '%.2f'|format(pedido.total) }}</span>
-                </div>
-              </div>
-              
-              <div class="info-item bg-light rounded-3 p-3">
-                <div class="icon-circle-sm bg-primary text-white me-2">
-                  <i class="fas fa-credit-card"></i>
-                </div>
-                <div>
-                  <small class="text-muted d-block">Método de Pago</small>
-                  <span class="fw-semibold">{{ pedido.metodo_pago|capitalize }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+<div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4" data-aos="fade-down">
+    <div class="flex items-center space-x-4">
+        <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/30">
+            <i class="fas fa-file-invoice text-2xl"></i>
         </div>
-
-        <!-- Dirección de entrega -->
-        <div class="col-lg-6">
-          <div class="info-card h-100">
-            <div class="d-flex align-items-center mb-3">
-              <div class="icon-circle bg-primary-light me-3">
-                <i class="fas fa-map-marker-alt text-primary fs-4"></i>
-              </div>
-              <h4 class="mb-0 fw-semibold text-dark">Dirección de Entrega</h4>
-            </div>
-            
-            {% if pedido.direccion %}
-              <div class="bg-light rounded-3 p-3 h-100">
-                <div class="d-flex mb-2">
-                  <div class="icon-circle-sm bg-primary text-white me-2">
-                    <i class="fas fa-location-dot"></i>
-                  </div>
-                  <div>
-                    <small class="text-muted d-block">Dirección</small>
-                    <span class="fw-semibold">{{ pedido.direccion.direccion }}</span>
-                  </div>
-                </div>
-                
-                {% if pedido.direccion.referencia %}
-                <div class="d-flex mb-3">
-                  <div class="icon-circle-sm bg-primary text-white me-2">
-                    <i class="fas fa-flag"></i>
-                  </div>
-                  <div>
-                    <small class="text-muted d-block">Referencia</small>
-                    <span class="fw-semibold">{{ pedido.direccion.referencia }}</span>
-                  </div>
-                </div>
-                {% endif %}
-                
-                {% if pedido.direccion.latitud and pedido.direccion.longitud %}
-                  <div id="mapa-direccion" class="rounded-3 shadow-sm mb-3" style="height: 150px;"
-                       data-lat="{{ pedido.direccion.latitud }}"
-                       data-lng="{{ pedido.direccion.longitud }}"></div>
-                  <div class="text-end">
-                    <a href="https://www.google.com/maps?q={{ pedido.direccion.latitud }},{{ pedido.direccion.longitud }}"
-                       target="_blank" rel="noopener" class="btn btn-sm btn-primary rounded-pill">
-                      <i class="fas fa-map-location-dot me-1"></i>Ver en Google Maps
-                    </a>
-                  </div>
-                {% endif %}
-              </div>
-            {% else %}
-              <div class="alert alert-warning mb-0 rounded-3">
-                <i class="fas fa-exclamation-triangle me-1"></i>No se registró dirección de entrega.
-              </div>
-            {% endif %}
-          </div>
+        <div>
+            <h2 class="text-3xl font-extrabold text-white tracking-tight">Pedido <span class="text-blue-400">#{{ pedido.id }}</span></h2>
+            <p class="text-slate-400 font-medium">Realizado el {{ pedido.fecha.strftime('%d/%m/%Y a las %H:%M') }}</p>
         </div>
-      </div>
     </div>
-  </div>
-
-  <!-- Lista de productos mejorada -->
-  <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
-    <div class="card-header bg-white border-bottom py-3">
-      <div class="d-flex align-items-center">
-        <div class="icon-circle bg-primary-light me-3">
-          <i class="fas fa-box-open text-primary fs-4"></i>
-        </div>
-        <h4 class="mb-0 fw-semibold text-dark">Productos</h4>
-      </div>
-    </div>
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-light">
-            <tr>
-              <th class="ps-4">Producto</th>
-              <th class="text-center">Precio Unitario</th>
-              <th class="text-center">Cantidad</th>
-              <th class="text-end pe-4">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for detalle in detalles %}
-            <tr class="product-row">
-              <td class="ps-4">
-                <div class="d-flex align-items-center">
-                  <div class="product-img-container me-3">
-                    <img src="{{ detalle.producto.imagen or 'https://via.placeholder.com/60' }}" 
-                         alt="{{ detalle.producto.nombre }}"
-                         class="rounded-3" loading="lazy">
-                  </div>
-                  <div>
-                    <h6 class="mb-0">{{ detalle.producto.nombre }}</h6>
-                    <small class="text-muted">{{ detalle.producto.descripcion[:50] }}{% if detalle.producto.descripcion|length > 50 %}...{% endif %}</small>
-                  </div>
-                </div>
-              </td>
-              <td class="text-center">Bs {{ '%.2f'|format(detalle.precio_unit) }}</td>
-              <td class="text-center">{{ detalle.cantidad }}</td>
-              <td class="text-end pe-4 fw-bold">Bs {{ '%.2f'|format(detalle.precio_unit * detalle.cantidad) }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot class="table-light">
-            <tr>
-              <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
-              <td class="text-end pe-4 fw-bold fs-5 text-success">Bs {{ '%.2f'|format(pedido.total) }}</td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Acciones mejoradas -->
-  <div class="d-flex flex-wrap justify-content-center gap-3 mt-5">
-    <a href="{{ url_for('detalle_pedido.historial_cliente') }}"
-       class="btn btn-outline-secondary rounded-pill px-4 py-2 action-btn">
-      <i class="fas fa-arrow-left me-2"></i>Volver al Historial
+    <a href="{{ url_for('detalle_pedido.historial_cliente') }}" class="px-5 py-2.5 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition font-bold flex items-center shrink-0">
+        <i class="fas fa-arrow-left mr-2"></i> Volver a pedidos
     </a>
-
-    <a href="{{ url_for('pedido.repetir', pedido_id=pedido.id) }}"
-       class="btn btn-success rounded-pill px-4 py-2 action-btn">
-      <i class="fas fa-redo me-2"></i>Repetir Pedido
-    </a>
-
-    <a href="{{ url_for('pedido.descargar_pdf', pedido_id=pedido.id) }}"
-       class="btn btn-outline-primary rounded-pill px-4 py-2 action-btn">
-      <i class="fas fa-file-pdf me-2"></i>Descargar PDF
-    </a>
-    
-    <a href="{{ url_for('pedido.descargar_ticket', pedido_id=pedido.id) }}"
-       class="btn btn-outline-dark rounded-pill px-4 py-2 action-btn">
-      <i class="fas fa-receipt me-2"></i>Ticket Térmico
-    </a>
-  </div>
-
-  <!-- Notificación de seguimiento mejorada -->
-<div class="alert alert-info text-center mt-5 shadow-sm">
-  <p class="mb-2">
-    <i class="fas fa-info-circle me-1"></i>
-    Estamos procesando tu pedido. Te notificaremos cuando esté en camino.
-  </p>
-  <p class="mb-0">
-    ¿Dudas? 
-<a href="https://wa.me/59173225724?text=Hola,%20soy%20{{ cliente.nombre }}.%20Quiero%20consultar%20sobre%20mi%20pedido%20número%20{{ pedido.id }}"
-   class="fw-bold text-success"
-   target="_blank" rel="noopener">
-   Escríbenos por WhatsApp <i class="fab fa-whatsapp ms-1"></i>
-</a>
-
-  </p>
-</div>
 </div>
 
-{% if pedido.direccion and pedido.direccion.latitud and pedido.direccion.longitud %}
-  <!-- Leaflet CSS y JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8" data-aos="fade-up">
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const mapaDiv = document.getElementById('mapa-direccion');
-      if (!mapaDiv) return;
-
-      const lat = parseFloat(mapaDiv.dataset.lat);
-      const lng = parseFloat(mapaDiv.dataset.lng);
-
-      if (!isNaN(lat) && !isNaN(lng)) {
-        const mapa = L.map('mapa-direccion').setView([lat, lng], 16);
-
-        const calle = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© OpenStreetMap contributors',
-          maxZoom: 19
-        });
-
-        const satelital = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: '© Esri — Satélite',
-          maxZoom: 19
-        });
-
-        satelital.addTo(mapa);
-
-        L.control.layers({ "🌐 Mapa": calle, "🛰️ Satélite": satelital }).addTo(mapa);
+    <!-- Timeline & Info -->
+    <div class="lg:col-span-1 space-y-6">
         
-        const customIcon = L.icon({
-          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-          shadowSize: [41, 41]
-        });
-        
-        L.marker([lat, lng], {icon: customIcon}).addTo(mapa)
-          .bindPopup('Ubicación de entrega')
-          .openPopup();
-      }
-    });
-  </script>
-{% endif %}
+        <!-- Estado actual -->
+        <div class="bg-clientCard rounded-3xl p-6 border border-slate-700 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+            
+            <h3 class="text-lg font-bold text-white mb-6 flex items-center">
+                <i class="fas fa-satellite-dish text-emerald-400 mr-2"></i> Seguimiento
+            </h3>
 
-<!-- Estilos personalizados mejorados -->
-<style>
-  /* Icon circles */
-  .icon-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .icon-circle-sm {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.8rem;
-  }
-  
-  .bg-primary-light {
-    background-color: rgba(13, 110, 253, 0.1);
-  }
-  
-  .bg-info-light {
-    background-color: rgba(13, 202, 240, 0.1);
-  }
-  
-  /* Info grid */
-  .info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-  
-  /* Product rows */
-  .product-row {
-    transition: all 0.2s ease;
-  }
-  
-  .product-row:hover {
-    background-color: rgba(13, 110, 253, 0.03);
-    transform: translateX(2px);
-  }
-  
-  .product-img-container {
-    width: 60px;
-    height: 60px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 0.5rem;
-    background-color: #f8f9fa;
-  }
-  
-  .product-img-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  /* Action buttons */
-  .action-btn {
-    transition: all 0.3s ease;
-    min-width: 180px;
-  }
-  
-  .action-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Status badge */
-  .order-status-badge .badge {
-    transition: all 0.3s ease;
-  }
-  
-  .order-status-badge:hover .badge {
-    transform: scale(1.05);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 767.98px) {
-    .info-grid {
-      grid-template-columns: 1fr;
-    }
-    
-    .action-btn {
-      width: 100%;
-    }
-  }
-</style>
+            {% set meta = {
+                'pendiente': {'color': 'amber', 'icon': 'fa-hourglass-half', 'label': 'En preparación'},
+                'confirmado': {'color': 'blue', 'icon': 'fa-check', 'label': 'Confirmado'},
+                'enviado': {'color': 'cyan', 'icon': 'fa-truck-fast', 'label': 'En camino'},
+                'entregado': {'color': 'emerald', 'icon': 'fa-home', 'label': 'Entregado'},
+                'cancelado': {'color': 'rose', 'icon': 'fa-times-circle', 'label': 'Cancelado'}
+            }.get(pedido.estado, {'color': 'slate', 'icon': 'fa-circle', 'label': pedido.estado}) %}
+
+            <div class="flex items-center justify-center p-4 bg-{{ meta.color }}-500/10 border border-{{ meta.color }}-500/30 rounded-2xl mb-6">
+                <i class="fas {{ meta.icon }} text-3xl text-{{ meta.color }}-400 mr-4"></i>
+                <div>
+                    <span class="block text-xs font-bold text-slate-400 tracking-wider uppercase">Estado Actual</span>
+                    <span class="text-xl font-black text-{{ meta.color }}-400">{{ meta.label }}</span>
+                </div>
+            </div>
+
+            <!-- Resumen info -->
+            <div class="space-y-4">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase block mb-1">Método de Pago</span>
+                    <span class="text-white font-medium flex items-center"><i class="fas fa-credit-card text-slate-400 mr-2"></i> {{ pedido.metodo_pago|capitalize }}</span>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase block mb-1">Dirección de Entrega</span>
+                    <span class="text-slate-300 flex items-start"><i class="fas fa-map-marker-alt text-rose-400 mr-2 mt-1"></i> {{ pedido.direccion.direccion if pedido.direccion else 'No especificada' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Factura / Comprobante -->
+        {% if pedido.factura %}
+        <div class="bg-gradient-to-br from-indigo-900/40 to-blue-900/20 rounded-3xl p-6 border border-indigo-500/30 shadow-xl relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+            <h3 class="text-lg font-bold text-white mb-2 flex items-center">
+                <i class="fas fa-file-invoice text-indigo-400 mr-2"></i> Tu Comprobante
+            </h3>
+            <p class="text-slate-400 text-sm mb-6">Generado el {{ pedido.factura.fecha.strftime('%d/%m/%Y') }}</p>
+
+            <a href="{{ url_for('static', filename=pedido.factura.archivo_pdf.replace('\\', '/') ) }}" target="_blank" class="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 transition flex items-center justify-center">
+                <i class="fas fa-file-pdf mr-2"></i> Descargar PDF
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="lg:col-span-2">
+        <div class="bg-clientCard rounded-3xl p-0 border border-slate-700 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+            
+            <div class="p-6 border-b border-slate-700/50">
+                <h3 class="text-lg font-bold text-white flex items-center">
+                    <i class="fas fa-shopping-basket text-blue-400 mr-2"></i> Artículos en este pedido
+                </h3>
+            </div>
+            
+            <div class="overflow-x-auto p-4 pt-0">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-700/50">
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs">Producto</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-center">Cant.</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-right">Precio Unit.</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/30">
+                        {% for item in pedido.detalles %}
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center">
+                                    <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}" class="w-12 h-12 object-cover rounded-xl bg-slate-900 border border-slate-700 mr-3" onerror="this.onerror=null; this.src='https://via.placeholder.com/50?text=No+Img';">
+                                    <div>
+                                        <h4 class="text-white font-bold">{{ item.producto.nombre }}</h4>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center">
+                                <span class="bg-slate-700 text-slate-300 font-bold px-3 py-1 rounded-lg text-sm">{{ item.cantidad }}</span>
+                            </td>
+                            <td class="py-4 px-4 text-right text-slate-400">Bs. {{ "%.2f"|format(item.precio_unit) }}</td>
+                            <td class="py-4 px-4 text-right font-bold text-emerald-400">Bs. {{ "%.2f"|format(item.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="border-t border-slate-700/50 bg-slate-800/20">
+                        <tr>
+                            <td colspan="3" class="py-5 px-4 text-right text-slate-400 font-bold uppercase text-sm tracking-wider">Total Final pagado:</td>
+                            <td class="py-5 px-4 text-right font-black text-white text-2xl drop-shadow-md">Bs. {{ "%.2f"|format(pedido.total) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

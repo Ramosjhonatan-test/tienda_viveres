@@ -1,101 +1,109 @@
 {% extends 'base.html' %}
 
-{% block title %}Contacto - Tienda de Víveres{% endblock %}
+{% block title %}Contáctanos | NeoMarket Premium{% endblock %}
 
 {% block content %}
-<div class="container my-5 py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="text-center mb-5" data-aos="fade-up">
-        <h2 class="display-5 fw-bold text-gradient-primary mb-3 animate__animated animate__fadeIn">
-          <i class="bi bi-chat-square-text-fill me-2"></i>¿Necesitás ayuda o querés dejarnos un mensaje?
-        </h2>
-        <p class="lead text-muted animate__animated animate__fadeIn">
-          <i class="bi bi-info-circle-fill me-2"></i>Estamos aquí para responder tus dudas, sugerencias o reclamos.
-        </p>
-      </div>
-
-      <form method="POST" action="{{ url_for('mensaje.enviar') }}" class="mx-auto bg-light p-4 rounded-4 shadow-sm" style="max-width: 600px;">
-        <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
-          <label for="nombre" class="form-label fw-semibold text-primary">
-            <i class="bi bi-person-fill me-2"></i>Tu nombre
-          </label>
-          <input type="text" class="form-control py-2 border-primary border-2" id="nombre" name="nombre" required maxlength="100" placeholder="Ingresa tu nombre">
-        </div>
-
-        <div class="mb-4" data-aos="fade-up" data-aos-delay="150">
-          <label for="email" class="form-label fw-semibold text-primary">
-            <i class="bi bi-envelope-fill me-2"></i>Correo electrónico
-          </label>
-          <input type="email" class="form-control py-2 border-primary border-2" id="email" name="email" required maxlength="100" placeholder="ejemplo@correo.com">
-        </div>
-
-        <div class="mb-4" data-aos="fade-up" data-aos-delay="200">
-          <label for="telefono" class="form-label fw-semibold text-primary">
-            <i class="bi bi-telephone-fill me-2"></i>Número de celular (opcional)
-          </label>
-          <input type="text" class="form-control py-2 border-primary border-2" id="telefono" name="telefono" maxlength="20" placeholder="Ingresa tu número">
-        </div>
-
-        <div class="mb-4" data-aos="fade-up" data-aos-delay="250">
-          <label for="mensaje" class="form-label fw-semibold text-primary">
-            <i class="bi bi-pencil-fill me-2"></i>Mensaje
-          </label>
-          <textarea class="form-control py-2 border-primary border-2" id="mensaje" name="mensaje" rows="5" required placeholder="Escribe tu mensaje aquí..."></textarea>
-        </div>
-
-        <div class="text-center mt-4" data-aos="fade-up" data-aos-delay="300">
-          <button type="submit" class="btn btn-primary btn-gradient px-4 py-2 hvr-grow">
-            <i class="bi bi-send-fill me-2"></i>Enviar mensaje
-          </button>
-        </div>
-      </form>
+<div class="relative min-h-[90vh] flex items-center justify-center py-20 px-4 overflow-hidden bg-[#080b11]">
+    <!-- Elementos Decorativos de Fondo -->
+    <div class="absolute top-0 left-0 w-full h-full">
+        <div class="absolute top-[10%] left-[5%] w-96 h-96 bg-blue-600/10 rounded-full blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[10%] right-[5%] w-96 h-96 bg-emerald-600/10 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s"></div>
     </div>
-  </div>
+
+    <div class="relative z-10 max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 gap-12" data-aos="zoom-in">
+        
+        <!-- Información de Contacto -->
+        <div class="flex flex-col justify-center space-y-8" data-aos="fade-right" data-aos-delay="200">
+            <div>
+                <span class="inline-block px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 text-blue-400 rounded-full text-xs font-bold uppercase tracking-widest mb-6">
+                   <i class="fas fa-headset mr-2"></i> Soporte 24/7
+                </span>
+                <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6">
+                    Estamos aquí para <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">ayudarte</span>.
+                </h1>
+                <p class="text-lg text-slate-400 leading-relaxed max-w-md">
+                    ¿Tienes dudas sobre tu pedido? ¿Quieres sugerir un producto? Nuestro equipo está listo para escucharte y brindarte la mejor experiencia.
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Tarjetas de Info rápida -->
+                <div class="flex items-center space-x-4 p-4 rounded-3xl bg-slate-800/20 border border-slate-700/50 hover:border-blue-500/50 transition-all group">
+                    <div class="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 group-hover:scale-110 transition-transform">
+                        <i class="fas fa-envelope-open-text text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">Escríbenos</p>
+                        <p class="text-white font-bold">contacto@neomarket.com</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4 p-4 rounded-3xl bg-slate-800/20 border border-slate-700/50 hover:border-emerald-500/50 transition-all group">
+                    <div class="w-12 h-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+                        <i class="fab fa-whatsapp text-2xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest">WhatsApp</p>
+                        <p class="text-white font-bold">+591 765 43210</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex space-x-4">
+                {% for icon in ['facebook-f', 'instagram', 'twitter'] %}
+                <a href="#" class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center text-slate-400 hover:bg-blue-500 hover:text-white transition-all transform hover:-translate-y-1">
+                    <i class="fab fa-{{ icon }}"></i>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Formulario Premium -->
+        <div class="bg-[#111827]/80 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-10 border border-slate-700 shadow-2xl relative overflow-hidden" data-aos="fade-left" data-aos-delay="400">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-emerald-500"></div>
+            
+            <form action="{{ url_for('mensaje.enviar') }}" method="POST" class="space-y-6">
+                <div class="space-y-2">
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Nombre Completo</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-500 transition-colors">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <input type="text" name="nombre" required 
+                               class="w-full pl-11 pr-4 py-4 bg-slate-900 border border-slate-700 rounded-2xl text-white font-bold focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-600" 
+                               placeholder="¿Como te llamas?">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Correo Electrónico</label>
+                    <div class="relative group">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 group-focus-within:text-blue-500 transition-colors">
+                            <i class="fas fa-at"></i>
+                        </div>
+                        <input type="email" name="email" required 
+                               class="w-full pl-11 pr-4 py-4 bg-slate-900 border border-slate-700 rounded-2xl text-white font-bold focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-600" 
+                               placeholder="tu@correo.com">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-xs font-black text-slate-500 uppercase tracking-[0.2em] ml-1">Mensaje</label>
+                    <textarea name="mensaje" rows="4" required 
+                              class="w-full p-4 bg-slate-900 border border-slate-700 rounded-2xl text-white font-medium focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 transition-all placeholder-slate-600 resize-none" 
+                              placeholder="Cuéntanos en qué podemos ayudarte..."></textarea>
+                </div>
+
+                <button type="submit" 
+                        class="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-blue-500/20 transform hover:-translate-y-1 active:scale-95 transition-all text-lg flex items-center justify-center">
+                    Enviar Mensaje <i class="fas fa-paper-plane ml-3 text-sm"></i>
+                </button>
+            </form>
+            
+            <p class="text-center text-[10px] text-slate-500 mt-6 font-bold uppercase tracking-widest opacity-50">
+                Tu privacidad es nuestra prioridad
+            </p>
+        </div>
+    </div>
 </div>
-
-<!-- Añade esto en tu head o verifica que esté en base.html -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
-<style>
-  .text-gradient-primary {
-    background: linear-gradient(45deg, #0d6efd, #20c997);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  
-  .btn-gradient {
-    background: linear-gradient(45deg, #0d6efd, #20c997);
-    border: none;
-    transition: all 0.3s ease;
-  }
-  
-  .btn-gradient:hover {
-    background: linear-gradient(45deg, #0b5ed7, #1aa179);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .hvr-grow {
-    display: inline-block;
-    vertical-align: middle;
-    transform: perspective(1px) translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    transition-duration: 0.3s;
-    transition-property: transform;
-  }
-  
-  .hvr-grow:hover, .hvr-grow:focus, .hvr-grow:active {
-    transform: scale(1.05);
-  }
-</style>
-
-<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-<script>
-  AOS.init({
-    duration: 800,
-    easing: 'ease-in-out-quad',
-    once: true
-  });
-</script>
 {% endblock %}

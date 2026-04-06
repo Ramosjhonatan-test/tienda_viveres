@@ -1,199 +1,205 @@
-{% extends 'base.html' %}
-
-{% block title %}Inicio - Mercado Fresco{% endblock %}
+{% extends "base.html" %}
 
 {% block content %}
-<div class="container">
-
-  <!-- Hero Section Mejorada -->
-  <section class="hero-section bg-success bg-gradient text-white rounded-4 p-5 mb-5 animate__animated animate__fadeIn" style="background: linear-gradient(135deg, #00c9a7, #845ec2);">
-    <div class="row align-items-center">
-      <div class="col-lg-12 text-center" data-aos="zoom-in">
-        <h1 class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown">Tu tienda en línea <span class="text-warning animate__animated animate__pulse animate__infinite animate__slower">24/7</span></h1>
-        <p class="lead mb-4 animate__animated animate__fadeIn animate__delay-1s">Encuentra los mejores champús, calidad garantizada y entrega rápida a tu hogar.</p>
-        <a href="{{ url_for('usuario.login') }}" class="btn btn-light btn-lg hvr-grow animate__animated animate__fadeInUp animate__delay-2s">
-          <i class="fas fa-shopping-basket me-2"></i> Comprar ahora
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- <section id="categorias" class="mb-5">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <h2 class="fw-bold mb-3 display-5">¿Qué necesitas hoy?</h2>
-      <p class="lead text-muted">Explora nuestras categorías y encuentra todo para tu hogar</p>
+<!-- Hero Section Premium -->
+<section class="relative min-h-[85vh] flex items-center overflow-hidden py-20 px-4 bg-primary-theme">
+    <!-- Decoraciones de Fondo -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[150px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] left-[-5%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[150px] animate-pulse" style="animation-delay: 3s"></div>
     </div>
 
-    <div class="row g-4">
-
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-        <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
-          <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
-            <img src="{{ url_for('static', filename='img/frutas.png') }}" alt="Frutas" class="img-fluid hvr-bob" style="height: 180px; object-fit: contain; transition: all 0.3s ease;">
-          </div>
-          <div class="card-body text-center">
-            <div class="icon-box bg-success bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-              <i class="fas fa-apple-alt fa-2x text-white"></i>
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-16 relative z-10">
+        <div class="md:w-1/2 space-y-10" data-aos="fade-right">
+            <div class="inline-flex items-center px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-xs font-black uppercase tracking-[0.2em] animate-bounce">
+                <i class="fas fa-bolt mr-2"></i> Entregas Ultra Rápidas
             </div>
-            <h3 class="h4 fw-bold mb-3">Frutas Frescas</h3>
-            <p class="text-muted mb-3">Desde manzanas hasta frutas exóticas, siempre frescas</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-success hvr-icon-forward rounded-pill px-4">
-              Explorar <i class="fas fa-arrow-right hvr-icon ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-
-
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
-        <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
-          <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
-            <img src="{{ url_for('static', filename='img/fideos.png') }}" alt="Lácteos" class="img-fluid hvr-bob" style="height: 180px; object-fit: contain; transition: all 0.3s ease;">
-          </div>
-          <div class="card-body text-center">
-            <div class="icon-box bg-primary bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-              <i class="fas fa-cheese fa-2x text-white"></i>
+            
+            <h1 class="text-6xl md:text-8xl font-black text-main leading-[0.95] tracking-tighter">
+                Tu despensa <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-emerald-400">Inteligente</span>.
+            </h1>
+            
+            <p class="text-xl text-slate-400 max-w-lg leading-relaxed font-medium">
+                La nueva era de los víveres ha llegado. Productos seleccionados con tecnología y frescura garantizada, directos a tu puerta.
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-6 pt-4">
+                <a href="{{ url_for('cliente.inicio') }}" class="px-10 py-5 bg-blue-600 text-white font-black rounded-2xl shadow-2xl shadow-blue-500/40 hover:bg-blue-500 hover:-translate-y-1 transition-all text-center flex items-center justify-center">
+                    Ver Catálogo <i class="fas fa-rocket ml-3 text-sm"></i>
+                </a>
+                <a href="#productos" class="px-10 py-5 bg-slate-800/50 backdrop-blur-md text-white font-black rounded-2xl border border-slate-700 hover:bg-slate-700 transition-all text-center">
+                    Ofertas Exclusivas
+                </a>
             </div>
-            <h3 class="h4 fw-bold mb-3">Lácteos</h3>
-            <p class="text-muted mb-3">Leche, quesos, yogures y más productos frescos</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-primary hvr-icon-forward rounded-pill px-4">
-              Explorar <i class="fas fa-arrow-right hvr-icon ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
 
-
-      <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
-        <div class="card border-0 h-100 shadow-sm hvr-float hvr-glow" style="border-radius: 16px;">
-          <div class="card-img-top bg-light p-4 text-center" style="background: linear-gradient(135deg, #f9f9f9, #e9ecef);">
-            <img src="{{ url_for('static', filename='img/bebidas.png') }}" alt="Bebidas" class="img-fluid hvr-bob" style="height: 180px; object-fit: contain; transition: all 0.3s ease;">
-          </div>
-          <div class="card-body text-center">
-            <div class="icon-box bg-warning bg-gradient rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
-              <i class="fas fa-wine-bottle fa-2x text-white"></i>
+            <!-- Stats Rápidos -->
+            <div class="flex items-center space-x-12 pt-10 border-t border-subtle">
+                <div>
+                    <p class="text-3xl font-black text-main">5k+</p>
+                    <p class="text-xs font-bold text-muted uppercase tracking-widest">Clientes</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-black text-main">100%</p>
+                    <p class="text-xs font-bold text-muted uppercase tracking-widest">Fresco</p>
+                </div>
+                <div>
+                    <p class="text-3xl font-black text-main">24/7</p>
+                    <p class="text-xs font-bold text-muted uppercase tracking-widest">Soporte</p>
+                </div>
             </div>
-            <h3 class="h4 fw-bold mb-3">Bebidas</h3>
-            <p class="text-muted mb-3">Productos bebidas hasta postres</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-warning text-white hvr-icon-forward rounded-pill px-4">
-              Explorar <i class="fas fa-arrow-right hvr-icon ms-2"></i>
-            </a>
-          </div>
         </div>
-      </div>
+        
+        <div class="md:w-1/2 relative" data-aos="zoom-in" data-aos-delay="200">
+            <div class="relative z-10 group">
+                <div class="absolute inset-0 bg-blue-500/20 rounded-full blur-[80px] -z-10 group-hover:bg-blue-500/30 transition-all"></div>
+                <img src="/static/img/frutas.png" alt="Víveres Premium" class="w-full h-auto drop-shadow-[0_35px_35px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-all duration-700 pointer-events-none">
+            </div>
+            
+            <!-- Cards Flotantes con Glassmorphism -->
+            <div class="absolute -top-10 -right-10 bg-card-theme/80 backdrop-blur-xl p-5 rounded-[2rem] shadow-2xl border border-subtle animate-bounce" style="animation-duration: 4s">
+                <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/40">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs font-bold text-muted uppercase tracking-widest">Calidad</p>
+                        <p class="text-main font-black">Premium</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </section> -->
+</section>
 
-  <!-- Productos destacados Mejorados -->
-  <section class="mb-5">
-    <div class="text-center mb-5" data-aos="fade-up">
-      <h2 class="fw-bold mb-3 display-5">Productos destacados</h2>
-      <p class="lead text-muted">Lo más vendido esta semana</p>
+<!-- Categorías Estilo Neon -->
+<section class="py-32 bg-secondary-theme relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+        <div class="text-center mb-20 space-y-4" data-aos="fade-up">
+            <span class="text-blue-500 font-black uppercase tracking-[0.4em] text-xs">Explora</span>
+            <h2 class="text-5xl font-black text-main italic">Nuestras Categorías</h2>
+            <div class="h-1.5 w-24 bg-blue-500 mx-auto rounded-full shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+            {% set cats = [
+                ('Lácteos', 'fa-cheese', 'from-blue-600/20 to-indigo-600/5', 'text-blue-400'),
+                ('Verduras', 'fa-carrot', 'from-orange-600/20 to-yellow-600/5', 'text-orange-400'),
+                ('Carnes', 'fa-drumstick-bite', 'from-rose-600/20 to-pink-600/5', 'text-rose-400'),
+                ('Abarrotes', 'fa-box-open', 'from-emerald-600/20 to-teal-600/5', 'text-emerald-400')
+            ] %}
+            {% for nombre, icono, grad, text in cats %}
+            <div class="group relative p-1 rounded-[2.5rem] bg-gradient-to-br {{ grad }} border border-white/5 hover:border-white/20 transition-all duration-500 cursor-pointer overflow-hidden" data-aos="fade-up" data-aos-delay="{{ loop.index * 100 }}">
+                <div class="p-10 text-center space-y-6 relative z-10">
+                    <div class="text-5xl {{ text }} group-hover:scale-125 transition-transform duration-500 drop-shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+                        <i class="fas {{ icono }}"></i>
+                    </div>
+                    <h3 class="text-xl font-black text-main tracking-tight">{{ nombre }}</h3>
+                    <div class="opacity-0 group-hover:opacity-100 transition-opacity flex justify-center translate-y-4 group-hover:translate-y-0 duration-500">
+                        <span class="text-[10px] font-black uppercase tracking-widest text-blue-400">Ver Productos <i class="fas fa-arrow-right ml-2"></i></span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+</section>
 
-    <div class="row g-4">
-      <!-- Producto 1 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-        <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
-          <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/alow.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Manzanas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title fw-bold">Jaboncillo de Aloe Vera</h5>
-            <p class="text-muted small">JABONCILLO</p>
-            <p class="text-success fw-bold mb-3 fs-5">Bs 8.50/kg</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
-              Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
+<!-- Productos Destacados -->
+<section id="productos" class="py-32 bg-primary-theme">
+    <div class="max-w-7xl mx-auto px-6 lg:px-12">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8" data-aos="fade-up">
+            <div class="space-y-4">
+                <h2 class="text-5xl font-black text-main leading-none tracking-tighter">Selección <span class="text-blue-500">Premium</span></h2>
+                <p class="text-muted font-medium text-lg italic">Los favoritos de nuestra comunidad esta semana.</p>
+            </div>
+            <a href="{{ url_for('cliente.inicio') }}" class="group px-8 py-4 bg-card-theme rounded-2xl text-main font-black hover:bg-blue-600 hover:text-white transition-all flex items-center border border-subtle">
+                Ver Todo el Catálogo <i class="fas fa-external-link-alt ml-3 text-xs group-hover:rotate-12 transition-transform"></i>
             </a>
-          </div>
         </div>
-      </div>
 
-      <!-- Producto 2 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-        <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
-          <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/arroz.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Leche" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title fw-bold">Jaboncillo de Arroz</h5>
-            <p class="text-muted small">JABONCILLO</p>
-            <p class="text-success fw-bold mb-3 fs-5">Bs 6.20</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
-              Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+            {% for producto in productos %}
+            <div class="bg-card-theme rounded-[3rem] p-5 border border-subtle hover:border-blue-500/30 hover:shadow-[0_30px_60px_rgba(0,0,0,0.1)] transition-all duration-500 flex flex-col group h-full" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+                <!-- Imagen con Overlay -->
+                <div class="relative rounded-[2.5rem] overflow-hidden bg-slate-800 mb-8 aspect-square flex items-center justify-center p-6">
+                    <img src="{{ producto.imagen if producto.imagen else '/static/img/default.png' }}" 
+                         alt="{{ producto.nombre }}" 
+                         class="max-h-full object-contain group-hover:scale-110 transition-all duration-700 drop-shadow-2xl">
+                    
+                    {% if producto.stock < 10 %}
+                    <div class="absolute top-4 right-4 bg-rose-500 text-white px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest shadow-lg">
+                        Casi agotado
+                    </div>
+                    {% endif %}
+                </div>
 
-      <!-- Producto 3 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-        <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
-          <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/romero.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Detergente" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title fw-bold">Champú de Romero</h5>
-            <p class="text-muted small text-uppercase">CHAMPÚ</p>
-            <p class="text-success fw-bold mb-3 fs-5">Bs 12.80</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
-              Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </a>
-          </div>
-        </div>
-      </div>
+                <!-- Contenido -->
+                <div class="flex-grow space-y-4 px-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">{{ producto.categoria.nombre if producto.categoria else 'Varios' }}</span>
+                        <div class="flex text-[10px] text-amber-400">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-main group-hover:text-blue-400 transition-colors">{{ producto.nombre }}</h3>
+                    <p class="text-sm text-muted line-clamp-2 leading-relaxed italic">{{ producto.descripcion }}</p>
+                </div>
 
-      <!-- Producto 4 -->
-      <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-        <div class="card h-100 border-0 shadow-sm hvr-float" style="border-radius: 16px;">
-          <div class="overflow-hidden position-relative" style="height: 220px; background: #f8f9fa; border-radius: 16px 16px 0 0;">
-            <img src="{{ url_for('static', filename='img/manzanilla.jpg') }}" class="card-img-top p-3 hvr-grow-rotate" alt="Bananas" style="height: 100%; object-fit: contain; transition: transform 0.5s ease;">
-          </div>
-          <div class="card-body">
-            <h5 class="card-title fw-bold">Jaboncillo de Manzanilla</h5>
-            <p class="text-muted small text-uppercase">JABONCILLO </p>
-            <p class="text-success fw-bold mb-3 fs-5">Bs 5.30/kg</p>
-            <a href="{{ url_for('usuario.login') }}" class="btn btn-outline-success w-100 hvr-icon-bounce rounded-pill">
-              Agregar <i class="fas fa-cart-plus hvr-icon ms-2"></i>
-            </a>
-          </div>
+                <!-- Footer Card -->
+                <div class="mt-8 pt-6 border-t border-subtle flex items-center justify-between px-2">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-muted font-bold uppercase tracking-widest mb-1">Inversión</span>
+                        <span class="text-3xl font-black text-main italic tracking-tighter">Bs {{ "%.2f"|format(producto.precio) }}</span>
+                    </div>
+                    
+                    <form action="{{ url_for('carrito.carrito_agregar') }}" method="POST">
+                        <input type="hidden" name="producto_id" value="{{ producto.id }}">
+                        <input type="hidden" name="cantidad" value="1">
+                        <button type="submit" class="w-14 h-14 bg-blue-600 text-white rounded-2xl flex items-center justify-center hover:bg-white hover:text-blue-600 transition-all shadow-xl shadow-blue-600/10 group-active:scale-90">
+                            <i class="fas fa-plus text-xl"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
         </div>
-      </div>
     </div>
-  </section>
+</section>
 
-  <!-- Beneficios Mejorados -->
-  <section class="bg-light rounded-4 p-5 mb-5" data-aos="fade-up" style="border-radius: 16px !important;">
-    <div class="row g-4 text-center">
-      <div class="col-md-4 hvr-grow">
-        <div class="p-4 h-100" style="background: white; border-radius: 12px;">
-          <div class="icon-box bg-success bg-gradient rounded-circle d-flex align-items-center justify-content-center mb-4 mx-auto hvr-wobble-vertical" style="width: 80px; height: 80px;">
-            <i class="fas fa-truck fa-2x text-white"></i>
-          </div>
-          <h4 class="fw-bold mb-3">Envío rápido</h4>
-          <p class="text-muted">Recibe tus productos en menos de 24 horas</p>
+<!-- Footer Promo -->
+<section class="max-w-7xl mx-auto px-6 py-32" data-aos="zoom-in">
+    <div class="relative rounded-[4rem] p-16 md:p-24 overflow-hidden flex flex-col md:flex-row items-center justify-between gap-16 bg-card-theme border border-subtle shadow-3xl">
+        <!-- Luces de fondo -->
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-emerald-600/10 rounded-full blur-[100px] -ml-48 -mb-48"></div>
+
+        <div class="space-y-8 relative z-10 text-center md:text-left max-w-xl">
+            <h2 class="text-5xl md:text-7xl font-black text-main leading-none tracking-tighter italic">
+                ¿Buscas <span class="text-blue-500 underline decoration-indigo-500 decoration-dotted">exclusividad</span>?
+            </h2>
+            <p class="text-muted text-xl font-medium leading-relaxed italic">
+                Nuestro personal shopper está listo para encontrar exactamente lo que necesitas. La atención premium que te mereces.
+            </p>
+            <div class="pt-6">
+                <a href="{{ url_for('contacto_view.contacto') }}" class="px-12 py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-500 transition-all transform hover:-translate-y-2 inline-flex items-center shadow-2xl">
+                    Solicitar Asistencia <i class="fas fa-paper-plane ml-3 text-sm"></i>
+                </a>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4 hvr-grow">
-        <div class="p-4 h-100" style="background: white; border-radius: 12px;">
-          <div class="icon-box bg-success bg-gradient rounded-circle d-flex align-items-center justify-content-center mb-4 mx-auto hvr-wobble-vertical" style="width: 80px; height: 80px;">
-            <i class="fas fa-leaf fa-2x text-white"></i>
-          </div>
-          <h4 class="fw-bold mb-3">Productos frescos</h4>
-          <p class="text-muted">Seleccionados cuidadosamente para tu hogar</p>
+        
+        <div class="flex items-center justify-center relative z-10" data-aos="fade-left">
+            <div class="relative">
+                <div class="flex -space-x-6">
+                    <img src="https://ui-avatars.com/api/?name=Admin&background=3b82f6&color=fff" class="w-24 h-24 rounded-[2rem] border-8 border-card-theme shadow-2xl">
+                    <img src="https://ui-avatars.com/api/?name=Support&background=10b981&color=fff" class="w-24 h-24 rounded-[2rem] border-8 border-card-theme shadow-2xl">
+                </div>
+                <div class="mt-8 bg-blue-500/10 backdrop-blur-xl border border-blue-500/30 p-6 rounded-3xl text-center">
+                    <p class="text-blue-400 font-black text-2xl">99.8%</p>
+                    <p class="text-[10px] font-bold text-muted uppercase tracking-widest">Satisfacción</p>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="col-md-4 hvr-grow">
-        <div class="p-4 h-100" style="background: white; border-radius: 12px;">
-          <div class="icon-box bg-success bg-gradient rounded-circle d-flex align-items-center justify-content-center mb-4 mx-auto hvr-wobble-vertical" style="width: 80px; height: 80px;">
-            <i class="fas fa-shield-alt fa-2x text-white"></i>
-          </div>
-          <h4 class="fw-bold mb-3">Pago seguro</h4>
-          <p class="text-muted">Protegemos tus datos en cada transacción</p>
-        </div>
-      </div>
     </div>
-  </section>
-
-</div>
+</section>
 {% endblock %}

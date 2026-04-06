@@ -4,7 +4,15 @@ import views.categoria_view as categoria_view
 
 categoria_bp = Blueprint('categoria', __name__, url_prefix='/categorias')
 
-@categoria_bp.route('/')
+@categoria_bp.route('/', endpoint='lista')
+def lista():
+    if session.get('rol') != 'admin':
+        return redirect(url_for('cliente.inicio'))
+    
+    categorias = Categoria.query.all()
+    return categoria_view.index(categorias)
+
+@categoria_bp.route('/admin-list', endpoint='index')
 def index():
     categorias = Categoria.query.all()
     return categoria_view.index(categorias)

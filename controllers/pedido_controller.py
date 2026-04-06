@@ -77,7 +77,11 @@ def confirmar():
     for item in carrito_items:
         item.delete()
     
-    generar_y_guardar_factura(pedido)
+    try:
+        generar_y_guardar_factura(pedido)
+    except Exception as e:
+        print(f"Error al generar factura: {e}")
+        flash('Tu pedido se registró, pero hubo un problema al generar el comprobante. Puedes descargarlo luego.', 'info')
 
 
     flash('¡Tu pedido fue registrado con éxito!', 'success')

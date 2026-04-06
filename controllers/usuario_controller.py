@@ -27,6 +27,7 @@ def login():
         session['id'] = usuario.id
         session['rol'] = usuario.rol
         session['nombre'] = usuario.nombre
+        session['user'] = usuario.username # Requerido por base.html
 
         flash(f'Bienvenido, {usuario.nombre}', 'success')
 
@@ -36,6 +37,12 @@ def login():
             return redirect(url_for('cliente.inicio'))
 
     return usuario_view.login()
+
+@usuario_bp.route('/logout')
+def logout():
+    session.clear()
+    flash('Has cerrado sesión correctamente.', 'success')
+    return redirect(url_for('home'))
 
 @usuario_bp.route('/registrar')
 def registrar():
@@ -85,9 +92,10 @@ def actualizar(id):
     usuario.correo = request.form.get('correo')
     usuario.celular = normalizar_celular(request.form.get('celular'))
 
-    nueva_contrasena = request.form['password']
+    nueva_contrasena = request.form.get('password')
     if nueva_contrasena:
-        usuario.set_password(nueva_contrasena)  # Asegúrate de tener este método en el modelo
+        from werkzeug.security import generate_password_hash
+        usuario.password = generate_password_hash(nueva_contrasena)
 
     usuario.save()  # O db.session.commit() si lo estás manejando directamente
 

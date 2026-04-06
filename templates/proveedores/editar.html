@@ -1,22 +1,53 @@
 {% extends 'base_admin.html' %}
 {% block title %}Editar Proveedor{% endblock %}
 {% block content %}
-<h2 class="mb-4">✏️ Editar Proveedor</h2>
 
-<form action="{{ url_for('proveedor.actualizar', id=proveedor.id) }}" method="POST" class="row g-3">
-  <div class="col-md-6">
-    <label for="nombre" class="form-label">Nombre</label>
-    <input type="text" class="form-control" id="nombre" name="nombre" value="{{ proveedor.nombre }}" required>
-  </div>
+<div class="mb-8 flex items-center justify-between" data-aos="fade-down">
+    <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400">
+            <i class="fas fa-edit text-xl"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Editar Proveedor</h2>
+    </div>
+    <a href="{{ url_for('proveedor.index') }}" class="px-4 py-2 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition font-bold flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Volver
+    </a>
+</div>
 
-  <div class="col-md-6">
-    <label for="contacto" class="form-label">Contacto</label>
-    <input type="text" class="form-control" id="contacto" name="contacto" value="{{ proveedor.contacto }}">
-  </div>
+<div class="bg-adminCard rounded-3xl p-8 border border-slate-700 shadow-2xl relative overflow-hidden" data-aos="fade-up">
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
 
-  <div class="col-12 mt-3">
-    <button type="submit" class="btn btn-primary"><i class="fas fa-save me-1"></i> Guardar</button>
-    <a href="{{ url_for('proveedor.index') }}" class="btn btn-secondary ms-2">Cancelar</a>
-  </div>
-</form>
+    <form action="{{ url_for('proveedor.actualizar', id=proveedor.id) }}" method="POST" class="max-w-2xl">
+        
+        <div class="space-y-1 mb-6">
+            <label for="nombre" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nombre <span class="text-rose-500">*</span></label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-building text-slate-500"></i>
+                </div>
+                <input type="text" id="nombre" name="nombre" value="{{ proveedor.nombre }}" required class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <div class="space-y-1 mb-6">
+            <label for="contacto" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Contacto (Opcional)</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-phone-alt text-slate-500"></i>
+                </div>
+                <input type="text" id="contacto" name="contacto" value="{{ proveedor.contacto or '' }}" class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <div class="flex space-x-4 pt-2">
+            <button type="submit" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg shadow-amber-500/30 transform hover:-translate-y-1 transition flex items-center">
+                <i class="fas fa-save mr-2"></i> Actualizar
+            </button>
+            <a href="{{ url_for('proveedor.index') }}" class="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition flex items-center">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
 {% endblock %}

@@ -1,125 +1,101 @@
 {% extends 'base_cliente.html' %}
-
+{% block title %}Agregar Dirección{% endblock %}
 {% block content %}
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-8 col-xl-7">
-      <div class="card shadow-sm border-0 rounded-3 overflow-hidden">
-        <!-- Encabezado con degradado -->
-        <div class="card-header bg-gradient-primary py-4">
-          <h2 class="text-white mb-0 text-center fw-bold">
-            <i class="fas fa-map-marker-alt me-2"></i>Registrar dirección
-          </h2>
-        </div>
-        
-        <div class="card-body p-4 p-lg-5">
-          <form action="{{ url_for('cliente.guardar_direccion') }}" method="post" class="needs-validation" novalidate>
-            <div class="row g-3 mb-4">
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="text" name="direccion" id="direccion" class="form-control border-2 border-primary rounded-3 shadow-sm" 
-                         placeholder=" " required>
-                  <label for="direccion" class="text-muted">
-                    <i class="fas fa-location-dot me-1 text-danger"></i> Dirección completa*
-                  </label>
-                </div>
-              </div>
-
-              <div class="col-md-6">
-                <div class="form-floating">
-                  <input type="text" name="referencia" id="referencia" class="form-control border-2 border-primary rounded-3 shadow-sm" 
-                         placeholder=" ">
-                  <label for="referencia" class="text-muted">
-                    <i class="fas fa-flag me-1 text-secondary"></i> Punto de referencia
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            <!-- Botón de geolocalización -->
-            <div class="d-flex align-items-center mb-4 bg-light rounded-3 p-3">
-              <button type="button" class="btn btn-primary rounded-pill px-4 py-2 me-3" onclick="usarUbicacionActual()">
-                <i class="fas fa-location-crosshairs me-2"></i>Detectar ubicación
-              </button>
-              <small class="text-muted flex-grow-1">
-                <i class="fas fa-info-circle me-1"></i>Permite el acceso a tu ubicación para autocompletar
-              </small>
-            </div>
-
-            <!-- Mapa mejorado -->
-            <div class="mb-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="mb-0 text-dark" style="font-weight: 600;">
-                  <i class="fas fa-globe-americas me-2 text-info"></i>SELECCIONA EN EL MAPA
-                </h5>
-                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill" onclick="centrarMapa()">
-                  <i class="fas fa-sync-alt me-1"></i>Reiniciar
-                </button>
-              </div>
-              <div id="map" class="rounded-3 border border-2 border-primary" style="height: 300px;"></div>
-              <small class="text-muted d-block mt-2">Haz clic en el mapa para marcar tu ubicación exacta</small>
-            </div>
-
-            <input type="hidden" name="latitud" id="latitud">
-            <input type="hidden" name="longitud" id="longitud">
-
-            <!-- Botones de acción -->
-            <div class="d-flex justify-content-between mt-5 pt-2">
-              <a href="{{ url_for('cliente.inicio') }}" class="btn btn-outline-danger rounded-pill px-4 py-2">
-                <i class="fas fa-times me-2"></i> Cancelar
-              </a>
-              <button type="submit" class="btn btn-success rounded-pill px-4 py-2 border-0" style="
-                background: linear-gradient(90deg, #00b09b 0%, #96c93d 100%);
-                box-shadow: 0 4px 15px rgba(0,176,155,0.3);
-              ">
-                <i class="fas fa-paper-plane me-2"></i> GUARDAR DIRECCIÓN
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Estilos adicionales -->
-<style>
-  .bg-gradient-primary {
-    background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
-  }
-  .form-control:focus {
-    border-color: #3a7bd5;
-    box-shadow: 0 0 0 0.25rem rgba(58, 123, 213, 0.25);
-  }
-  .card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
-  }
-</style>
 
 <!-- Leaflet CSS y JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<script>
-  // (El mismo código JavaScript que tenías originalmente)
-  const map = L.map('map').setView([-16.5, -68.15], 13);
+<div class="max-w-4xl mx-auto py-8">
+    <div class="mb-8 flex items-center justify-between" data-aos="fade-down">
+        <div class="flex items-center space-x-3">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/30">
+                <i class="fas fa-map-marked-alt text-2xl"></i>
+            </div>
+            <div>
+                <h2 class="text-3xl font-extrabold text-white tracking-tight">Agregar Dirección</h2>
+                <p class="text-slate-400 font-medium">Registra el lugar donde quieres recibir tus productos.</p>
+            </div>
+        </div>
+    </div>
 
+    <div class="bg-clientCard rounded-3xl border border-slate-700 shadow-xl overflow-hidden relative" data-aos="fade-up">
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+        
+        <div class="p-8">
+            <form action="{{ url_for('cliente.guardar_direccion') }}" method="post" class="space-y-6">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-1">
+                        <label for="direccion" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Dirección completa <span class="text-rose-500">*</span></label>
+                        <div class="relative rounded-2xl shadow-sm border border-slate-600 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all bg-slate-800/50">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-location-dot text-rose-500"></i>
+                            </div>
+                            <input type="text" name="direccion" id="direccion" required class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium" placeholder="Ej: Av. Principal 123">
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="referencia" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Referencia</label>
+                        <div class="relative rounded-2xl shadow-sm border border-slate-600 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all bg-slate-800/50">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-flag text-blue-400"></i>
+                            </div>
+                            <input type="text" name="referencia" id="referencia" class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium" placeholder="Cerca de...">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl mb-2">
+                    <button type="button" class="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white font-bold rounded-xl transition flex items-center shadow-lg shadow-blue-500/20 mr-4 shrink-0 transition-transform active:scale-95" onclick="usarUbicacionActual()">
+                        <i class="fas fa-location-crosshairs mr-2"></i> Detectar mi ubicación
+                    </button>
+                    <p class="text-xs text-blue-200"><i class="fas fa-info-circle mr-1"></i> Puedes detectar tu ubicación actual automáticamente o marcarla en el mapa.</p>
+                </div>
+
+                <!-- Mapa -->
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center">
+                        <label class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1 flex items-center">
+                            <i class="fas fa-globe-americas mr-2 text-indigo-400 text-lg"></i> Selecciona en el mapa
+                        </label>
+                        <button type="button" class="text-xs bg-slate-700 hover:bg-slate-600 text-slate-300 font-bold py-1 px-3 rounded-lg transition" onclick="centrarMapa()">
+                            <i class="fas fa-sync-alt mr-1"></i> Reiniciar
+                        </button>
+                    </div>
+                    <div id="map" class="w-full h-80 rounded-2xl border-2 border-slate-600 overflow-hidden shadow-inner"></div>
+                    <p class="text-xs text-slate-500 text-center mt-2">Haz clic en el mapa para ajustar con precisión el marcador de entrega.</p>
+                </div>
+
+                <input type="hidden" name="latitud" id="latitud">
+                <input type="hidden" name="longitud" id="longitud">
+
+                <div class="pt-6 border-t border-slate-700/50 flex space-x-4">
+                    <button type="submit" class="flex-grow py-3.5 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black rounded-xl shadow-lg shadow-emerald-500/30 transform hover:-translate-y-1 transition text-lg flex items-center justify-center">
+                        <i class="fas fa-paper-plane mr-2"></i> Guardar Dirección
+                    </button>
+                    <a href="{{ url_for('carrito.index') }}" class="px-8 py-3.5 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition flex items-center justify-center">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+  const map = L.map('map').setView([-16.5, -68.15], 13);
   const calle = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© OpenStreetMap contributors',
     maxZoom: 19
   });
-
   const satelital = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     attribution: '© Esri — Satélite',
     maxZoom: 19
   });
-
   satelital.addTo(map);
-
 
   const baseMaps = {
     "🌐 Calle": calle,
@@ -133,7 +109,6 @@
     const { lat, lng } = e.latlng;
     document.getElementById('latitud').value = lat;
     document.getElementById('longitud').value = lng;
-
     if (marker) {
       marker.setLatLng([lat, lng]);
     } else {
@@ -147,17 +122,15 @@
 
   function usarUbicacionActual() {
     if (!navigator.geolocation) {
-      Swal.fire('Permiso requerido', 'Tu navegador no permite acceder a la ubicación.', 'warning');
-      return;
+        if(typeof Swal !== 'undefined') Swal.fire('Error', 'Ubicación no soportada.', 'error');
+        else alert('Ubicación no soportada por el navegador.');
+        return;
     }
-
     navigator.geolocation.getCurrentPosition(async (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
-
       document.getElementById('latitud').value = lat;
       document.getElementById('longitud').value = lon;
-
       try {
         const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
         const res = await fetch(url, { headers: { 'User-Agent': 'NeoMarket' } });
@@ -166,16 +139,14 @@
       } catch (err) {
         document.getElementById('direccion').value = 'Ubicación detectada';
       }
-
       map.setView([lat, lon], 16);
-      if (marker) {
-        marker.setLatLng([lat, lon]);
-      } else {
-        marker = L.marker([lat, lon]).addTo(map);
-      }
+      if (marker) marker.setLatLng([lat, lon]);
+      else marker = L.marker([lat, lon]).addTo(map);
     }, (err) => {
-      Swal.fire('Ubicación denegada', 'No pudimos acceder a tu ubicación.', 'error');
+        if(typeof Swal !== 'undefined') Swal.fire('Error', 'Ubicación denegada.', 'error');
+        else alert('No pudimos acceder a tu ubicación.');
     });
   }
 </script>
+
 {% endblock %}

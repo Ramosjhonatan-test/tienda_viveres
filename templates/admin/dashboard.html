@@ -2,145 +2,135 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard-container">
-  <div class="dashboard-header mb-4">
-    <h2><i class="fas fa-tachometer-alt me-2"></i>Panel General</h2>
-  </div>
-
-  <!-- Tarjetas principales -->
-  <div class="row g-4 mb-4">
-    <div class="col-md-3">
-      <div class="stat-card bg-primary text-white p-4 animate__animated animate__fadeInUp">
-        <div class="card-icon mb-2"><i class="fas fa-users fa-lg"></i></div>
-        <div class="card-value">{{ total_usuarios }}</div>
-        <div class="card-label">Usuarios registrados</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card bg-success text-white p-4 animate__animated animate__fadeInUp" data-aos-delay="100">
-        <div class="card-icon mb-2"><i class="fas fa-box-open fa-lg"></i></div>
-        <div class="card-value">{{ total_productos }}</div>
-        <div class="card-label">Productos activos</div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card bg-info text-white p-4 animate__animated animate__fadeInUp" data-aos-delay="200">
-        <div class="card-icon mb-2"><i class="fas fa-clipboard-list fa-lg"></i></div>
-        <div class="card-value">{{ pedidos_hoy }}</div>
-        <div class="card-label">Pedidos hoy <small class="d-block text-light">{{ pedidos_semana }} esta semana</small></div>
-      </div>
-    </div>
-    <div class="col-md-3">
-      <div class="stat-card bg-dark text-white p-4 animate__animated animate__fadeInUp" data-aos-delay="300">
-        <div class="card-icon mb-2"><i class="fas fa-envelope fa-lg"></i></div>
-        <div class="card-value">{{ mensajes_totales }}</div>
-        <div class="card-label">Mensajes <small class="d-block text-warning">{{ mensajes_pendientes }} sin responder</small></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Productos con stock bajo -->
-  <div class="card bg-danger text-white mb-4 shadow animate__animated animate__pulse animate__infinite">
-    <div class="card-body">
-      <h5 class="mb-3"><i class="fas fa-exclamation-triangle me-2"></i>Productos con stock crítico</h5>
-      <ul class="list-group list-group-flush">
-        {% for p in productos_bajos %}
-        <li class="list-group-item bg-transparent text-white d-flex justify-content-between align-items-center border-bottom border-light">
-          {{ p.nombre }}
-          <span class="badge bg-dark">{{ p.stock }} unidades</span>
-        </li>
-        {% else %}
-        <li class="list-group-item text-center text-light bg-transparent">Todos los productos tienen stock suficiente.</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <!-- Últimos pedidos y mensajes -->
-  <div class="row g-4">
-    <div class="col-md-6">
-      <div class="card bg-dark text-white h-100">
-        <div class="card-header border-0 bg-transparent">
-          <h5 class="mb-0"><i class="fas fa-history me-2"></i>Últimos pedidos</h5>
+<div class="space-y-6">
+    <div class="flex items-center space-x-3 mb-8" data-aos="fade-right">
+        <div class="w-12 h-12 bg-primary/20 rounded-2xl flex items-center justify-center text-primary">
+            <i class="fas fa-tachometer-alt text-xl"></i>
         </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-{% for id, fecha, total, producto_nombre in ultimos_pedidos %}
-<li class="list-group-item bg-transparent border-0 text-white d-flex justify-content-between align-items-center">
-  <div>
-    <strong>#{{ id }}</strong><br>
-    <small class="text-light">{{ fecha.strftime('%d/%m/%Y') }} – {{ producto_nombre }}</small>
-  </div>
-  <span class="badge bg-success">Bs. {{ "%.2f"|format(total) }}</span>
-</li>
-{% else %}
-<li class="list-group-item text-center text-muted bg-transparent">No hay pedidos recientes.</li>
-{% endfor %}
-
-          </ul>
-        </div>
-      </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Panel General</h2>
     </div>
 
-    <div class="col-md-6">
-      <div class="card bg-dark text-white h-100">
-        <div class="card-header border-0 bg-transparent">
-          <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Últimos mensajes</h5>
+    <!-- Stat Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        
+        <div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-3xl p-6 shadow-[0_10px_30px_rgba(37,99,235,0.3)] transform hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="0">
+            <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+            <div class="text-blue-200 mb-2"><i class="fas fa-users text-3xl"></i></div>
+            <div class="text-4xl font-black text-white mb-1">{{ total_usuarios }}</div>
+            <div class="text-sm font-bold text-blue-200 uppercase tracking-wider">Usuarios Registrados</div>
         </div>
-        <div class="card-body">
-          <ul class="list-group list-group-flush">
-            {% for m in ultimos_mensajes %}
-            <li class="list-group-item bg-transparent border-0 d-flex justify-content-between align-items-center text-white">
-              <div>
-                <strong>{{ m.nombre }}</strong><br>
-                <small class="text-light">{{ m.email }}</small>
-              </div>
-              {% if m.respondido %}
-              <span class="badge bg-secondary">Respondido</span>
-              {% else %}
-              <span class="badge bg-warning text-dark">Sin responder</span>
-              {% endif %}
-            </li>
-            {% else %}
-            <li class="list-group-item text-center text-muted bg-transparent">No hay mensajes recientes.</li>
-            {% endfor %}
-          </ul>
+
+        <div class="bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl p-6 shadow-[0_10px_30px_rgba(16,185,129,0.3)] transform hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="100">
+            <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+            <div class="text-emerald-200 mb-2"><i class="fas fa-box-open text-3xl"></i></div>
+            <div class="text-4xl font-black text-white mb-1">{{ total_productos }}</div>
+            <div class="text-sm font-bold text-emerald-200 uppercase tracking-wider">Productos Activos</div>
         </div>
-      </div>
+
+        <div class="bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-3xl p-6 shadow-[0_10px_30px_rgba(6,182,212,0.3)] transform hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="200">
+            <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+            <div class="text-cyan-200 mb-2"><i class="fas fa-clipboard-list text-3xl"></i></div>
+            <div class="text-4xl font-black text-white mb-1">{{ pedidos_hoy }}</div>
+            <div class="text-sm font-bold text-cyan-200 uppercase tracking-wider">Pedidos Hoy</div>
+            <div class="text-xs text-cyan-100 mt-2 opacity-80">{{ pedidos_semana }} esta semana</div>
+        </div>
+
+        <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 rounded-3xl p-6 shadow-[0_10px_30px_rgba(99,102,241,0.3)] transform hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group" data-aos="fade-up" data-aos-delay="300">
+            <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 rounded-full bg-white opacity-10 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+            <div class="text-indigo-200 mb-2"><i class="fas fa-envelope text-3xl"></i></div>
+            <div class="text-4xl font-black text-white mb-1">{{ mensajes_totales }}</div>
+            <div class="text-sm font-bold text-indigo-200 uppercase tracking-wider">Mensajes</div>
+            <div class="text-xs font-bold text-amber-300 mt-2">{{ mensajes_pendientes }} sin responder</div>
+        </div>
+
     </div>
-  </div>
+
+    <!-- Layout Grids -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
+        
+        <!-- Stock Crítico -->
+        <div class="lg:col-span-1" data-aos="fade-up" data-aos-delay="400">
+            <div class="bg-adminCard rounded-3xl p-6 border border-rose-500/30 shadow-[0_0_30px_rgba(244,63,94,0.1)] h-full relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500 to-rose-400"></div>
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                    <i class="fas fa-exclamation-triangle text-rose-500 mr-2 animate-pulse"></i> Stock Crítico
+                </h3>
+                
+                <div class="space-y-3">
+                    {% for p in productos_bajos %}
+                    <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-800/50 border border-slate-700 hover:bg-slate-800 transition">
+                        <span class="font-medium text-slate-300 line-clamp-1">{{ p.nombre }}</span>
+                        <span class="px-2 py-1 rounded-lg bg-rose-500/20 text-rose-400 text-xs font-bold whitespace-nowrap">{{ p.stock }} unid.</span>
+                    </div>
+                    {% else %}
+                    <div class="text-center p-6 text-slate-500 font-medium">
+                        <i class="fas fa-check-circle text-emerald-500 text-3xl mb-3 opacity-50 block"></i>
+                        Todo el inventario está en niveles óptimos.
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Two Columns right side -->
+        <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Últimos Pedidos -->
+            <div data-aos="fade-up" data-aos-delay="500">
+                <div class="bg-adminCard rounded-3xl p-6 border border-slate-700 h-full relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-emerald-400"></div>
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-history text-primary mr-2"></i> Últimos Pedidos
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        {% for id, fecha, total, producto_nombre in ultimos_pedidos %}
+                        <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-700/50 hover:bg-slate-800 transition">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="font-bold text-emerald-400">#{{ id }}</span>
+                                <span class="px-2 py-1 rounded bg-slate-700 text-slate-300 text-[10px] font-bold">{{ fecha.strftime('%d/%m/%Y') }}</span>
+                            </div>
+                            <div class="flex justify-between items-end mt-2">
+                                <span class="text-sm text-slate-400 line-clamp-1 flex-1 mr-2">{{ producto_nombre }}</span>
+                                <span class="font-black text-white whitespace-nowrap">Bs. {{ "%.2f"|format(total) }}</span>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="text-center p-6 text-slate-500 font-medium">No hay pedidos recientes.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Últimos Mensajes -->
+            <div data-aos="fade-up" data-aos-delay="600">
+                <div class="bg-adminCard rounded-3xl p-6 border border-slate-700 h-full relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 to-blue-400"></div>
+                    <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                        <i class="fas fa-comments text-indigo-400 mr-2"></i> Últimos Mensajes
+                    </h3>
+                    
+                    <div class="space-y-3">
+                        {% for m in ultimos_mensajes %}
+                        <div class="p-3 rounded-2xl bg-slate-800/30 border border-slate-700/50 hover:bg-slate-800 transition">
+                            <div class="flex justify-between items-start mb-1">
+                                <span class="font-bold text-slate-200 line-clamp-1 max-w-[70%]">{{ m.nombre }}</span>
+                                {% if m.respondido %}
+                                <span class="px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">Respondido</span>
+                                {% else %}
+                                <span class="px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-400 text-[10px] font-bold">Pendiente</span>
+                                {% endif %}
+                            </div>
+                            <span class="text-xs text-slate-500 block">{{ m.email }}</span>
+                        </div>
+                        {% else %}
+                        <div class="text-center p-6 text-slate-500 font-medium">No hay mensajes recientes.</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-{% endblock %}
-
-{% block scripts %}
-<style>
-  .stat-card {
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    border: none;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
-  }
-  .stat-card:hover {
-    transform: translateY(-4px);
-  }
-  .card-icon {
-    opacity: 0.9;
-  }
-  .card-value {
-    font-size: 2.2rem;
-    font-weight: bold;
-    margin-bottom: 0.2rem;
-  }
-  .card-label {
-    font-size: 0.9rem;
-    opacity: 0.85;
-  }
-  .bg-purple {
-    background-color: #6f42c1 !important;
-  }
-  .list-group-item {
-    background: transparent;
-    color: #fff;
-  }
-</style>
 {% endblock %}

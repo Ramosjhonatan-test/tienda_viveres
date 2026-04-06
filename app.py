@@ -2,11 +2,13 @@ import os
 import time
 from flask import Flask, request, render_template, session
 from flask_migrate import Migrate
+from flask_socketio import SocketIO, emit
 from extensions import mail
 from database import db
 from models.usuario import Usuario
 from models.carrito import Carrito
 from models.direccion import Direccion
+from models.producto import Producto
 from datetime import datetime
 import pytz
 from dotenv import load_dotenv
@@ -41,7 +43,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "supersecreto_dev")
 
 # 👉 Configuración de Base de Datos (usando .env)
 db_user = os.getenv("DB_USER", "postgres")
-db_pass = os.getenv("DB_PASSWORD", "1522")
+db_pass = os.getenv("DB_PASSWORD", "password")
 db_host = os.getenv("DB_HOST", "localhost")
 db_port = os.getenv("DB_PORT", "5432")
 db_name = os.getenv("DB_NAME", "tienda_viveres")
@@ -61,6 +63,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
 mail.init_app(app)
 db.init_app(app)
 migrate = Migrate(app, db)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Blueprints
 app.register_blueprint(usuario_controller.usuario_bp)
@@ -96,12 +99,21 @@ def cantidad_carrito():
 
 @app.route("/")
 def home():
-    return render_template("index.html")
+    productos = Producto.query.order_by(Producto.id.desc()).all()
+    return render_template("index.html", productos=productos)
+
+# Eventos de SocketIO para tiempo real
+@socketio.on('connect')
+def handle_connect():
+    print('Cliente conectado al socket')
+
+@socketio.on('notificacion_admin')
+def handle_notification(data):
+    emit('mostrar_alerta', data, broadcast=True)
 
 # Ejecución local
 if __name__ == "__main__":
     with app.app_context():
-        print("Database URI:", app.config["SQLALCHEMY_DATABASE_URI"])
         db.create_all()
 
         if not Usuario.query.filter_by(username='admin').first():
@@ -112,6 +124,6 @@ if __name__ == "__main__":
                 rol='admin'
             )
             admin.save()
-            print("✔ Usuario administrador creado (usuario: admin, clave: admin123)")
+            print("✔ Usuario administrador creado (usuario: admin, clave: admin)")
 
-    app.run(debug=True)
+    socketio.run(app, debug=True)

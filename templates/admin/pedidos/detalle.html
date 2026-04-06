@@ -1,146 +1,202 @@
 {% extends 'base_admin.html' %}
-
 {% block title %}Detalle Pedido #{{ pedido.id }}{% endblock %}
-
 {% block content %}
-<div class="container-fluid py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0 text-white">Detalle del Pedido #{{ pedido.id }}</h2>
-    <a href="{{ url_for('admin_pedido.lista') }}" class="btn btn-outline-light">
-      <i class="fas fa-arrow-left me-1"></i> Volver a la lista
+
+<div class="mb-8 flex items-center justify-between" data-aos="fade-down">
+    <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-indigo-500/20 rounded-2xl flex items-center justify-center text-indigo-400">
+            <i class="fas fa-file-invoice text-xl"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Detalle del Pedido <span class="text-indigo-400">#{{ pedido.id }}</span></h2>
+    </div>
+    <a href="{{ url_for('admin_pedido.lista') }}" class="px-4 py-2 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition font-bold flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Volver
     </a>
-  </div>
-
-  <div class="row g-4">
-    <!-- Columna izquierda - Información del cliente y pedido -->
-    <div class="col-lg-4">
-      <!-- Datos del cliente -->
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-user me-2"></i> Información del Cliente</h5>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Nombre completo</h6>
-            <p class="mb-0">{{ pedido.usuario.nombre }}</p>
-          </div>
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Correo electrónico</h6>
-            <p class="mb-0">{{ pedido.usuario.email }}</p>
-          </div>
-          {% if pedido.usuario.telefono %}
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Teléfono</h6>
-            <p class="mb-0">{{ pedido.usuario.telefono }}</p>
-          </div>
-          {% endif %}
-        </div>
-      </div>
-
-      <!-- Información del pedido -->
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i> Detalles del Pedido</h5>
-        </div>
-        <div class="card-body">
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Fecha y hora</h6>
-            <p class="mb-0">{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
-          </div>
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Estado</h6>
-            <span class="badge bg-{{ 'warning' if pedido.estado == 'pendiente' else
-                                   'primary' if pedido.estado == 'confirmado' else
-                                   'info' if pedido.estado == 'enviado' else
-                                   'success' if pedido.estado == 'entregado' else
-                                   'danger' }}">
-              {{ pedido.estado|capitalize }}
-            </span>
-          </div>
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Método de pago</h6>
-            <p class="mb-0">{{ pedido.metodo_pago or 'No especificado' }}</p>
-          </div>
-          <div class="mb-3">
-            <h6 class="text-muted small mb-1">Total</h6>
-            <h4 class="mb-0 text-success">Bs {{ "%.2f"|format(pedido.total) }}</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Columna derecha - Productos y factura -->
-    <div class="col-lg-8">
-      <!-- Productos del pedido -->
-      <div class="card border-0 shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-shopping-basket me-2"></i> Productos</h5>
-        </div>
-        <div class="card-body p-0">
-          <div class="table-responsive">
-            <table class="table table-hover mb-0">
-              <thead class="table-light">
-                <tr>
-                  <th class="ps-4">Producto</th>
-                  <th class="text-center">Cantidad</th>
-                  <th class="text-end">Precio unitario</th>
-                  <th class="text-end pe-4">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in pedido.detalles %}
-                <tr>
-                  <td class="ps-4">{{ item.producto.nombre }}</td>
-                  <td class="text-center">{{ item.cantidad }}</td>
-                  <td class="text-end">Bs {{ "%.2f"|format(item.precio_unit) }}</td>
-                  <td class="text-end pe-4">Bs {{ "%.2f"|format(item.subtotal) }}</td>
-                </tr>
-                {% endfor %}
-              </tbody>
-              <tfoot class="table-light">
-                <tr>
-                  <th colspan="3" class="ps-4 text-end">Total:</th>
-                  <th class="text-end pe-4">Bs {{ "%.2f"|format(pedido.total) }}</th>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Factura (si hay) -->
-      {% if pedido.factura %}
-      <div class="card border-0 shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0"><i class="fas fa-file-invoice me-2"></i> Factura</h5>
-        </div>
-        <div class="card-body">
-          <p class="mb-4">Factura generada el {{ pedido.factura.fecha.strftime('%d/%m/%Y a las %H:%M') }}</p>
-          
-          <div class="d-flex flex-wrap gap-3">
-            <a href="{{ url_for('static', filename=pedido.factura.archivo_pdf.replace('\\', '/') ) }}" 
-               class="btn btn-success" target="_blank">
-              <i class="fas fa-file-pdf me-2"></i> Ver PDF
-            </a>
-            {% if pedido.usuario.celular %}
-  {% set celular = pedido.usuario.celular %}
-  {% set mensaje = "Hola " ~ pedido.usuario.nombre ~ ", aquí está tu factura del pedido #" ~ pedido.id|string ~ ": " ~ url_for('static', filename=pedido.factura.archivo_pdf.replace('\\', '/'), _external=True) %}
-  {% set whatsapp_link = "https://wa.me/" ~ celular ~ "?text=" ~ mensaje|urlencode %}
-  <a href="{{ whatsapp_link }}" class="btn btn-success" target="_blank">
-    <i class="fab fa-whatsapp me-2"></i> Enviar por WhatsApp
-  </a>
-{% endif %}
-            {% if pedido.usuario.correo %}
-              <a href="{{ url_for('admin_pedido.enviar_factura_por_correo', pedido_id=pedido.id) }}" 
-                 class="btn btn-primary">
-                <i class="fas fa-envelope me-2"></i> Enviar por Correo
-              </a>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endif %}
-    </div>
-  </div>
 </div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6" data-aos="fade-up">
+
+    <!-- Columna Izquierda: Información -->
+    <div class="lg:col-span-1 space-y-6">
+        
+        <!-- Cliente -->
+        <div class="bg-adminCard rounded-3xl p-6 border border-slate-700 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-user text-blue-400 mr-2"></i> Información del Cliente
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Nombre Completo</span>
+                    <p class="text-white font-medium flex items-center shadow-sm">
+                        <img src="https://ui-avatars.com/api/?name={{ pedido.usuario.nombre }}&background=1e293b&color=fff" class="w-6 h-6 rounded-full mr-2 border border-slate-600">
+                        {{ pedido.usuario.nombre }}
+                    </p>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Correo Electrónico</span>
+                    <p class="text-slate-300"><i class="fas fa-envelope text-slate-500 mr-2"></i>{{ pedido.usuario.correo or 'No provisto' }}</p>
+                </div>
+                {% if pedido.usuario.telefono %}
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Teléfono / Celular</span>
+                    <p class="text-slate-300"><i class="fas fa-phone text-slate-500 mr-2"></i>{{ pedido.usuario.telefono }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Pedido Resumen -->
+        <div class="bg-adminCard rounded-3xl p-6 border border-slate-700 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center">
+                <i class="fas fa-info-circle text-emerald-400 mr-2"></i> Detalles de la Orden
+            </h3>
+            
+            <div class="space-y-4">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Fecha y Hora</span>
+                    <p class="text-slate-300"><i class="fas fa-calendar-alt text-slate-500 mr-2"></i>{{ pedido.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Estado</span>
+                    {% set estado_clases = {
+                        'pendiente': 'bg-amber-500/20 text-amber-500 border border-amber-500/30',
+                        'confirmado': 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+                        'enviado': 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30',
+                        'entregado': 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+                        'cancelado': 'bg-rose-500/20 text-rose-500 border border-rose-500/30'
+                    } %}
+                    <span class="inline-block px-3 py-1 rounded-xl text-sm font-bold {{ estado_clases.get(pedido.estado, 'bg-slate-700 text-slate-300') }}">
+                        {{ pedido.estado|capitalize }}
+                    </span>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Método de Pago</span>
+                    <p class="text-slate-300 capitalize"><i class="fas fa-credit-card text-slate-500 mr-2"></i>{{ pedido.metodo_pago or 'No especificado' }}</p>
+                </div>
+                <div class="pt-2 border-t border-slate-700/50">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block mb-1">Total Pagado</span>
+                    <h4 class="text-3xl font-black text-emerald-400">Bs. {{ "%.2f"|format(pedido.total) }}</h4>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Columna Derecha: Productos y Factura -->
+    <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Productos -->
+        <div class="bg-adminCard rounded-3xl p-0 border border-slate-700 shadow-xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+            
+            <div class="p-6 border-b border-slate-700/50">
+                <h3 class="text-lg font-bold text-white flex items-center">
+                    <i class="fas fa-shopping-basket text-purple-400 mr-2"></i> Artículos en la Orden
+                </h3>
+            </div>
+            
+            <div class="overflow-x-auto p-4 pt-0">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-700/50">
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs">Producto</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-center">Cant.</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-right">Precio Unit.</th>
+                            <th class="py-3 px-4 font-bold text-slate-400 uppercase tracking-wider text-xs text-right">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/30">
+                        {% for item in pedido.detalles %}
+                        <tr class="hover:bg-slate-800/30 transition-colors">
+                            <td class="py-4 px-4">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-xl bg-slate-700 flex items-center justify-center mr-3 border border-slate-600">
+                                        <i class="fas fa-box text-slate-400"></i>
+                                    </div>
+                                    <span class="text-white font-medium">{{ item.producto.nombre }}</span>
+                                </div>
+                            </td>
+                            <td class="py-4 px-4 text-center">
+                                <span class="bg-slate-700 text-slate-300 font-bold px-3 py-1 rounded-lg text-sm">{{ item.cantidad }}</span>
+                            </td>
+                            <td class="py-4 px-4 text-right text-slate-400">Bs. {{ "%.2f"|format(item.precio_unit) }}</td>
+                            <td class="py-4 px-4 text-right font-bold text-emerald-400">Bs. {{ "%.2f"|format(item.subtotal) }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="border-t-2 border-slate-700">
+                        <tr>
+                            <td colspan="3" class="py-4 px-4 text-right text-slate-400 font-bold uppercase text-sm tracking-wider">Total Final:</td>
+                            <td class="py-4 px-4 text-right font-black text-white text-xl">Bs. {{ "%.2f"|format(pedido.total) }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!-- Facturación -->
+        <div class="bg-adminCard rounded-3xl p-6 border border-slate-700 shadow-xl relative overflow-hidden" data-aos="fade-up" data-aos-delay="100">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-orange-500"></div>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center sm:items-start mb-6">
+                <div class="mb-4 sm:mb-0">
+                    <h3 class="text-lg font-bold text-white flex items-center mb-1">
+                        <i class="fas fa-file-invoice text-red-400 mr-2"></i> Comprobante de Venta
+                    </h3>
+                    {% if pedido.factura %}
+                    <p class="text-sm text-slate-400">Generado el {{ pedido.factura.fecha.strftime('%d/%m/%Y a las %H:%M') }}</p>
+                    {% else %}
+                    <p class="text-sm text-amber-400"><i class="fas fa-exclamation-triangle mr-1"></i> Comprobante no generado</p>
+                    {% endif %}
+                </div>
+                <i class="fas {{ 'fa-check-circle text-emerald-500/50' if pedido.factura else 'fa-times-circle text-rose-500/50' }} text-4xl"></i>
+            </div>
+            
+            <div class="flex flex-wrap gap-3">
+                <!-- Reporte Principal -->
+                <a href="{{ url_for('admin_pedido.ver_ticket', pedido_id=pedido.id) }}" target="_blank" class="px-5 py-2.5 bg-slate-700 hover:bg-slate-600 text-white font-bold rounded-xl transition flex items-center border border-slate-600">
+                    <i class="fas fa-print mr-2"></i> Ver Reporte (Ticket)
+                </a>
+
+                {% if pedido.factura %}
+                <a href="{{ url_for('static', filename=pedido.factura.archivo_pdf.replace('\\', '/') ) }}" target="_blank" class="px-5 py-2.5 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white font-bold rounded-xl transition flex items-center border border-red-500/30">
+                    <i class="fas fa-file-pdf mr-2"></i> Comprobante PDF
+                </a>
+                
+                {% if pedido.usuario.celular %}
+                {% set celular = pedido.usuario.celular %}
+                {% set mensaje = "Hola " ~ pedido.usuario.nombre ~ ", aquí está tu comprobante del pedido #" ~ pedido.id|string ~ ": " ~ url_for('static', filename=pedido.factura.archivo_pdf.replace('\\', '/'), _external=True) %}
+                {% set whatsapp_link = "https://wa.me/" ~ celular ~ "?text=" ~ mensaje|urlencode %}
+                <a href="{{ whatsapp_link }}" target="_blank" class="px-5 py-2.5 bg-emerald-500/20 hover:bg-emerald-500 text-emerald-400 hover:text-white font-bold rounded-xl transition flex items-center border border-emerald-500/30">
+                    <i class="fab fa-whatsapp mr-2 text-lg"></i> WhatsApp
+                </a>
+                {% endif %}
+                
+                {% if pedido.usuario.correo %}
+                <!-- Botón Directo (Gmail Web) -->
+                {% set gmail_subject = "Factura Pedido #" ~ pedido.id|string %}
+                {% set gmail_body = "Hola " ~ pedido.usuario.nombre ~ ",\n\nGracias por tu compra. Te enviamos el comprobante del pedido #" ~ pedido.id|string ~ ".\n\nSaludos." %}
+                {% set gmail_link = "https://mail.google.com/mail/?view=cm&fs=1&to=" ~ pedido.usuario.correo ~ "&su=" ~ gmail_subject|urlencode ~ "&body=" ~ gmail_body|urlencode %}
+                <a href="{{ gmail_link }}" target="_blank" class="px-5 py-2.5 bg-rose-500/20 hover:bg-rose-500 text-rose-500 hover:text-white font-bold rounded-xl transition flex items-center border border-rose-500/30">
+                    <i class="fab fa-google mr-2"></i> Gmail
+                </a>
+
+                <a href="{{ url_for('admin_pedido.enviar_factura_por_correo', pedido_id=pedido.id) }}" class="px-5 py-2.5 bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white font-bold rounded-xl transition flex items-center border border-blue-500/30">
+                    <i class="fas fa-envelope mr-2"></i> Correo Directo
+                </a>
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('admin_pedido.generar_factura', pedido_id=pedido.id) }}" class="px-5 py-2.5 bg-amber-500/20 hover:bg-amber-500 text-amber-500 hover:text-white font-bold rounded-xl transition flex items-center border border-amber-500/30">
+                    <i class="fas fa-cogs mr-2"></i> Generar Comprobante PDF
+                </a>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
 {% endblock %}

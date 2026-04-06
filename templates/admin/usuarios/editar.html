@@ -2,80 +2,104 @@
 {% block title %}Editar Usuario{% endblock %}
 {% block content %}
 
-<h2 class="mb-4"><i class="fas fa-user-edit me-2"></i>Editar Usuario</h2>
-
-<form action="{{ url_for('admin.actualizar_usuario', id=usuario.id) }}" method="POST" class="row g-4 needs-validation" novalidate>
-  <div class="col-md-6">
-    <label for="nombre" class="form-label">Nombre completo</label>
-    <div class="input-group">
-      <span class="input-group-text"><i class="fas fa-user"></i></span>
-      <input type="text" class="form-control" id="nombre" name="nombre" value="{{ usuario.nombre }}" required>
+<div class="mb-8 flex items-center justify-between" data-aos="fade-down">
+    <div class="flex items-center space-x-3">
+        <div class="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center text-amber-400">
+            <i class="fas fa-user-edit text-xl"></i>
+        </div>
+        <h2 class="text-3xl font-extrabold text-white tracking-tight">Editar Usuario</h2>
     </div>
-  </div>
-
-  <div class="col-md-6">
-    <label for="username" class="form-label">Usuario</label>
-    <div class="input-group">
-      <span class="input-group-text"><i class="fas fa-user-circle"></i></span>
-      <input type="text" class="form-control" id="username" name="username" value="{{ usuario.username }}" required>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <label for="correo" class="form-label">Correo electrónico</label>
-    <div class="input-group">
-      <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-      <input type="email" class="form-control" id="correo" name="correo" value="{{ usuario.correo or '' }}">
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <label for="celular" class="form-label">Número de celular</label>
-    <div class="input-group">
-      <span class="input-group-text"><i class="fas fa-phone-alt me-1"></i>+591</span>
-      <input type="text" class="form-control" id="celular" name="celular"
-             value="{{ usuario.celular[3:] if usuario.celular and usuario.celular.startswith('591') else usuario.celular or '' }}">
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <label for="password" class="form-label">Nueva contraseña (opcional)</label>
-    <div class="input-group">
-      <span class="input-group-text"><i class="fas fa-lock"></i></span>
-      <input type="password" class="form-control" id="password" name="password" placeholder="••••••••">
-      <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" title="Mostrar/ocultar">
-        <i class="fas fa-eye" id="toggleIcon"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="col-md-6">
-    <label for="rol" class="form-label">Rol de acceso</label>
-    <select class="form-select" name="rol" id="rol">
-      <option value="cliente" {% if usuario.rol == 'cliente' %}selected{% endif %}>Cliente</option>
-      <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %}>Administrador</option>
-    </select>
-  </div>
-
-  <div class="col-12 text-end">
-    <button class="btn btn-success btn-glow me-2" type="submit">
-      <i class="fas fa-save me-1"></i>Guardar cambios
-    </button>
-    <a href="{{ url_for('admin.lista_usuarios') }}" class="btn btn-outline-light">
-      <i class="fas fa-times me-1"></i>Cancelar
+    <a href="{{ url_for('admin.lista_usuarios') }}" class="px-4 py-2 rounded-xl border border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white transition font-bold flex items-center">
+        <i class="fas fa-arrow-left mr-2"></i> Volver
     </a>
-  </div>
-</form>
+</div>
 
-<script>
-  function togglePassword() {
-    const input = document.getElementById('password');
-    const icon = document.getElementById('toggleIcon');
-    const isHidden = input.type === 'password';
-    input.type = isHidden ? 'text' : 'password';
-    icon.classList.toggle('fa-eye', !isHidden);
-    icon.classList.toggle('fa-eye-slash', isHidden);
-  }
-</script>
+<div class="bg-adminCard rounded-3xl p-8 border border-slate-700 shadow-2xl relative overflow-hidden" data-aos="fade-up">
+    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+
+    <form action="{{ url_for('admin.actualizar_usuario', id=usuario.id) }}" method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Nombre -->
+        <div class="space-y-1">
+            <label for="nombre" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Nombre completo</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-user text-slate-500"></i>
+                </div>
+                <input type="text" id="nombre" name="nombre" value="{{ usuario.nombre }}" required class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <!-- Usuario -->
+        <div class="space-y-1">
+            <label for="username" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Usuario</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-user-circle text-slate-500"></i>
+                </div>
+                <input type="text" id="username" name="username" value="{{ usuario.username }}" required class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <!-- Correo -->
+        <div class="space-y-1">
+            <label for="correo" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Correo electrónico</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-envelope text-slate-500"></i>
+                </div>
+                <input type="email" id="correo" name="correo" value="{{ usuario.correo or '' }}" class="block w-full pl-11 pr-4 py-3 rounded-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <!-- Celular -->
+        <div class="space-y-1">
+            <label for="celular" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Número de celular</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50 flex">
+                <span class="inline-flex items-center px-4 rounded-l-xl border-r border-slate-600 bg-slate-700/50 text-slate-400 font-bold text-sm">
+                    <i class="fas fa-phone-alt mr-2"></i>+591
+                </span>
+                <input type="text" id="celular" name="celular" value="{{ usuario.celular[3:] if usuario.celular and usuario.celular.startswith('591') else usuario.celular or '' }}" class="block w-full px-4 py-3 rounded-r-xl bg-transparent focus:outline-none text-white placeholder-slate-500 font-medium">
+            </div>
+        </div>
+
+        <!-- Rol -->
+        <div class="space-y-1">
+            <label for="rol" class="text-xs font-bold text-slate-400 uppercase tracking-wider ml-1">Rol de acceso</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <select name="rol" id="rol" class="block w-full pl-4 pr-10 py-3 rounded-xl bg-transparent focus:outline-none text-white font-medium appearance-none">
+                    <option value="cliente" {% if usuario.rol == 'cliente' %}selected{% endif %} class="bg-slate-800">Cliente</option>
+                    <option value="admin" {% if usuario.rol == 'admin' %}selected{% endif %} class="bg-slate-800">Administrador</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                    <i class="fas fa-chevron-down text-xs"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="space-y-1" x-data="{ show: false }">
+            <label for="password" class="text-xs font-bold text-amber-400 uppercase tracking-wider ml-1">Nueva contraseña (Dejar en blanco para no cambiar)</label>
+            <div class="relative rounded-xl shadow-sm border border-slate-600 focus-within:border-amber-500 focus-within:ring-1 focus-within:ring-amber-500 transition-all bg-slate-800/50">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-lock text-slate-500"></i>
+                </div>
+                <input id="password" name="password" :type="show ? 'text' : 'password'" placeholder="••••••••" class="block w-full pl-11 pr-12 py-3 rounded-xl bg-transparent focus:outline-none text-white font-medium placeholder-slate-500">
+                <div class="absolute inset-y-0 right-0 pr-4 flex items-center">
+                    <button type="button" @click="show = !show" class="text-slate-400 hover:text-amber-400 focus:outline-none transition-colors">
+                        <i class="fas" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="md:col-span-2 pt-4 flex justify-end">
+            <button type="submit" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-lg shadow-amber-500/30 transform hover:-translate-y-1 transition flex items-center">
+                <i class="fas fa-save mr-2"></i> Guardar cambios
+            </button>
+        </div>
+    </form>
+</div>
 
 {% endblock %}

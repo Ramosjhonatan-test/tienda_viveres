@@ -1,208 +1,237 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{% block title %}Tienda Cliente{% endblock %}</title>
-  
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  
-  <!-- 3. CSS Personalizado (Glassmorphism/Neumorphism) -->
-  <style>
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: #f8f9fa;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Mi Tienda - Cliente{% endblock %}</title>
     
-    /* Efecto Glassmorphism para navbar */
-    .navbar {
-      background: rgba(13, 110, 253, 0.85) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Alpine JS -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- SweetAlert2 Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
-    /* Efecto Neumorphism para tarjetas (ejemplo) */
-    .card-neumorphism {
-      background: #f8f9fa;
-      border-radius: 15px;
-      box-shadow:  8px 8px 16px #d9d9d9, 
-                  -8px -8px 16px #ffffff;
-    }
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { 
+                        primary: '#3b82f6', 
+                        secondary: '#1d4ed8',
+                        accent: '#f59e0b',
+                        clientBg: 'var(--bg-primary)',
+                        clientCard: 'var(--card-bg)',
+                        borderSubtle: 'var(--border-subtle)'
+                    },
+                    borderRadius: { '4xl': '2rem', '5xl': '3rem' }
+                }
+            }
+        }
+    </script>
     
-    /* Efecto Ripple para botones */
-    .btn-ripple {
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-ripple:after {
-      content: "";
-      display: block;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      pointer-events: none;
-      background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
-      background-repeat: no-repeat;
-      background-position: 50%;
-      transform: scale(10,10);
-      opacity: 0;
-      transition: transform .5s, opacity 1s;
-    }
-    .btn-ripple:active:after {
-      transform: scale(0,0);
-      opacity: 0.3;
-      transition: 0s;
-    }
-  </style>
-  
-  <!-- Bloque para estilos adicionales en templates hijos -->
-  {% block styles %}{% endblock %}
+    <style>
+        [x-cloak] { display: none !important; }
+        :root {
+            --bg-primary: #080b11;
+            --bg-secondary: #0b0f18;
+            --card-bg: #111827;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --nav-glass: rgba(8, 11, 17, 0.8);
+            --border-subtle: rgba(255, 255, 255, 0.05);
+        }
+        .light {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --nav-glass: rgba(255, 255, 255, 0.8);
+            --border-subtle: rgba(0, 0, 0, 0.05);
+        }
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-muted);
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+        .text-main { color: var(--text-main); }
+        .bg-primary-theme { background-color: var(--bg-primary); }
+        .bg-secondary-theme { background-color: var(--bg-secondary); }
+        .bg-card-theme { background-color: var(--card-bg); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    </style>
+    <script>
+        // Apply theme immediately to prevent flicker
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'light') document.documentElement.classList.add('light');
+    </script>
+    {% block styles %}{% endblock %}
 </head>
-<body>
-  <!-- Navbar con animación AOS -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary" data-aos="fade-down">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{{ url_for('cliente.inicio') }}">
-        <i class="fas fa-store me-2"></i>Mi Tienda
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#clienteNavbar">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="clienteNavbar">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item" data-aos="fade-left" data-aos-delay="100">
-            <a class="nav-link hvr-underline-from-center" href="{{ url_for('cliente.inicio') }}">Inicio</a>
-          </li>
-            <!-- <li class="nav-item" data-aos="fade-left" data-aos-delay="200">
-            <a class="nav-link hvr-underline-from-center" href="#">Categorías</a>
-            </li> -->
-          <li class="nav-item" data-aos="fade-left" data-aos-delay="300">
-            <a class="nav-link hvr-underline-from-center" href="{{ url_for('carrito.index') }}">
-              <i class="fas fa-shopping-cart me-1"></i>Carrito
-              <span class="badge bg-danger rounded-pill cart-counter">
-                {{ cantidad_en_carrito }}
-              </span>
-            </a>
-          </li>
-          <li class="nav-item" data-aos="fade-left" data-aos-delay="350">
-            <a class="nav-link hvr-underline-from-center" href="{{ url_for('detalle_pedido.historial_cliente') }}">
-              <i class="fas fa-box me-1"></i>Mis pedidos
-            </a>
-          </li>
-          <li class="nav-item" data-aos="fade-left" data-aos-delay="400">
-            <a class="nav-link hvr-grow" href="{{ url_for('usuario.login') }}">
-              <i class="fas fa-sign-out-alt me-1"></i>Cerrar sesión
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
+<body class="bg-clientBg font-sans text-slate-300 overflow-x-hidden flex flex-col min-h-screen selection:bg-primary/30 selection:text-white">
 
-  <div class="container py-4">
-    <!-- Notificaciones con SweetAlert2 -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% for category, message in messages %}
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            Swal.fire({
-              title: '{{ category|capitalize }}',
-              text: '{{ message }}',
-              icon: '{{ "success" if category == "success" else "error" }}',
-              toast: true,
-              position: 'top-end',
-              showConfirmButton: false,
-              timer: 3000
+    <!-- Glowing Background Elements -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute -top-40 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-[100px]"></div>
+        <div class="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px]"></div>
+    </div>
+
+    <!-- Top Navigation Glassmorphism -->
+    <nav x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-50 bg-clientBg/60 backdrop-blur-xl border-b border-white/5 shadow-lg transition-all" data-aos="fade-down">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                
+                <!-- Logo & Toggle -->
+                <div class="flex items-center space-x-6">
+                    <a href="{{ url_for('cliente.inicio') }}" class="flex items-center space-x-3 group">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex justify-center items-center text-white group-hover:-rotate-12 transition transform shadow-lg shadow-blue-500/30">
+                            <i class="fas fa-store text-xl"></i>
+                        </div>
+                        <span class="text-xl font-extrabold tracking-tight text-main">NeoMarket</span>
+                    </a>
+
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-primary hover:bg-primary/20 transition-all">
+                        <i id="theme-icon" class="fas fa-moon transition-all duration-300"></i>
+                    </button>
+                </div>
+
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex space-x-2 items-center">
+                    <a href="{{ url_for('cliente.inicio') }}" class="px-5 py-2 font-bold text-sm rounded-xl transition-all {{ 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]' if request.path == url_for('cliente.inicio') else 'text-slate-400 hover:text-white hover:bg-white/5' }}">Inicio</a>
+                    
+                    <a href="{{ url_for('carrito.index') }}" class="px-5 py-2 font-bold text-sm rounded-xl transition-all {{ 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]' if request.path == url_for('carrito.index') else 'text-slate-400 hover:text-white hover:bg-white/5' }} flex items-center relative gap-2">
+                        <i class="fas fa-shopping-cart text-lg"></i> Carrito
+                        <span class="absolute -top-1 -right-2 bg-rose-500 text-white min-w-[1.25rem] h-5 rounded-full flex items-center justify-center text-[10px] font-black px-1 border-2 border-clientBg shadow-sm cart-counter">{{ cantidad_en_carrito }}</span>
+                    </a>
+                    
+                    <a href="{{ url_for('detalle_pedido.historial_cliente') }}" class="px-5 py-2 font-bold text-sm rounded-xl transition-all {{ 'bg-primary/10 text-primary border border-primary/20 shadow-[0_0_15px_rgba(59,130,246,0.2)]' if request.path == url_for('detalle_pedido.historial_cliente') else 'text-slate-400 hover:text-white hover:bg-white/5' }} flex items-center gap-2">
+                        <i class="fas fa-box text-lg"></i> Pedidos
+                    </a>
+
+                    <div class="w-px h-6 bg-white/10 mx-2"></div>
+                    
+                    <div class="relative" x-data="{ userMenu: false }">
+                        <button @click="userMenu = !userMenu" @click.away="userMenu = false" class="flex items-center gap-2 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl transition font-bold text-sm text-white border border-white/5">
+                            <i class="fas fa-user-circle text-lg text-primary"></i> {{ session.get('user', 'Cuenta') }}
+                        </button>
+                        
+                        <div x-show="userMenu" x-transition x-cloak class="absolute right-0 mt-3 w-48 bg-clientCard border border-white/10 shadow-2xl rounded-2xl py-2 z-50 backdrop-blur-xl">
+                            <a href="{{ url_for('usuario.logout') }}" class="block px-4 py-2 text-sm font-bold text-rose-400 hover:bg-rose-500/10">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden w-10 h-10 flex items-center justify-center bg-white/5 rounded-xl text-slate-400 hover:text-white transition">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition.origin.top x-cloak class="md:hidden bg-clientCard/95 backdrop-blur-xl border-b border-white/10 absolute w-full left-0 px-4 py-6 space-y-3 shadow-2xl">
+            <a href="{{ url_for('cliente.inicio') }}" class="block p-4 rounded-xl font-bold bg-white/5 text-white">Inicio</a>
+            <a href="{{ url_for('carrito.index') }}" class="block p-4 rounded-xl font-bold bg-white/5 text-white flex justify-between">Carrito <span class="bg-primary text-white px-2 py-1 rounded text-xs cart-counter">{{ cantidad_en_carrito }}</span></a>
+            <a href="{{ url_for('detalle_pedido.historial_cliente') }}" class="block p-4 rounded-xl font-bold bg-white/5 text-white">Mis Pedidos</a>
+            <a href="{{ url_for('usuario.logout') }}" class="block p-4 rounded-xl font-bold text-rose-400 border border-rose-500/20 bg-rose-500/5 text-center">Cerrar Sesión</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
+        <!-- Flash Messages -->
+        <div class="fixed top-24 left-1/2 -translate-x-1/2 z-[100] w-full max-w-md px-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                Swal.fire({
+                                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000,
+                                    background: '#111827', color: '#fff',
+                                    icon: '{{ "success" if category == "success" else "error" }}',
+                                    title: '{{ message }}',
+                                    customClass: { popup: 'rounded-2xl shadow-2xl border border-white/10' }
+                                });
+                            });
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-secondary-theme border-t border-subtle py-16 mt-16 relative overflow-hidden backdrop-blur-md">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -mt-32 -mr-32 pointer-events-none"></div>
+        <div class="container mx-auto px-4 text-center relative z-10">
+            <div class="inline-flex items-center justify-center w-14 h-14 bg-white/5 rounded-2xl mb-6 group hover:bg-primary transition-all duration-500 border border-white/5">
+                <i class="fas fa-store text-slate-500 group-hover:text-white transition-colors"></i>
+            </div>
+            <p class="font-extrabold text-main text-lg">NeoMarket</p>
+            <p class="text-sm text-muted mt-2 font-medium tracking-wide font-sans">© 2026 Premium Groceries Experience.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+
+        // Update Header Cart with animation
+        function updateCartCounter(count) {
+            const counters = document.querySelectorAll('.cart-counter');
+            counters.forEach(c => {
+                c.textContent = count;
+                c.classList.add('animate-[ping_0.5s_cubic-bezier(0,0,0.2,1)_1]');
+                setTimeout(() => c.classList.remove('animate-[ping_0.5s_cubic-bezier(0,0,0.2,1)_1]'), 500);
             });
-          });
-        </script>
-      {% endfor %}
-    {% endwith %}
-    
-    {% block content %}{% endblock %}
-  </div>
+        }
 
-  <!-- Footer con efecto Glassmorphism -->
-  <footer class="py-4 mt-5" data-aos="fade-up" style="background: rgba(13, 110, 253, 0.1); backdrop-filter: blur(5px);">
-    <div class="container text-center">
-      <p class="mb-0 animate__animated animate__fadeIn">
-        © 2025 Mi Tienda de Víveres | Todos los derechos reservados
-      </p>
-    </div>
-  </footer>
+        // Global socket for alerts (Client Side)
+        const socket = io();
+        socket.on('mostrar_alerta', (data) => {
+            const audio = new Audio("{{ url_for('static', filename='sounds/notification.wav') }}");
+            audio.play().catch(e => console.log('Audio error:', e));
 
-  <!-- Scripts -->
-  <!-- Bootstrap Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- AOS -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    AOS.init({
-      duration: 800,
-      easing: 'ease-in-out-quad'
-    });
-  </script>
-  
-  <!-- 2. Notificaciones -->
-  <!-- SweetAlert2 -->
-    <!-- Scripts Esenciales -->
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- jQuery (requerido para DataTables) -->
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- DataTables -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- AOS (Animaciones) -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>AOS.init({ duration: 800 });</script>
-  <!-- Chart.js (para gráficos en dashboard) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    tippy('[data-tippy-content]', {
-      placement: 'bottom',
-      animation: 'fade'
-    });
-  </script>
-  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <script>
-    // Efecto Ripple para todos los botones con la clase
-    document.querySelectorAll('.btn-ripple').forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        let x = e.clientX - e.target.getBoundingClientRect().left;
-        let y = e.clientY - e.target.getBoundingClientRect().top;
+            Swal.fire({
+                toast: true, position: 'top-end', icon: data.type === 'success' ? 'success' : 'info',
+                title: data.message, showConfirmButton: false, timer: 4000,
+                customClass: { popup: 'border border-primary border-l-4 shadow-xl rounded-xl' }
+            });
+        });
+
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
         
-        let ripples = document.createElement('span');
-        ripples.style.left = x + 'px';
-        ripples.style.top = y + 'px';
-        this.appendChild(ripples);
-        
-        setTimeout(() => {
-          ripples.remove()
-        }, 1000);
-      });
-    });
-    
-    // Ejemplo de actualización del contador del carrito
-    function updateCartCounter(count) {
-      $('.cart-counter').text(count).addClass('animate__animated animate__bounceIn');
-      setTimeout(() => {
-        $('.cart-counter').removeClass('animate__animated animate__bounceIn');
-      }, 1000);
-    }
-  </script>
+        const updateThemeUI = (isLight) => {
+            themeIcon.className = isLight ? 'fas fa-sun text-amber-400' : 'fas fa-moon';
+        };
 
+        toggleBtn.addEventListener('click', () => {
+            const isLight = document.documentElement.classList.toggle('light');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeUI(isLight);
+        });
+
+        // Initial setup
+        updateThemeUI(document.documentElement.classList.contains('light'));
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

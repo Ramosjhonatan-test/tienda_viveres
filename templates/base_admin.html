@@ -1,224 +1,199 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Panel Administrativo{% endblock %}</title>
-  
-  <!-- Bootstrap 5 Dark Mode -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Admin Tools Bundle -->
-  <!-- 1. Animaciones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <!-- 2. Íconos -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- 3. DataTables (para tablas) -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-  <!-- 4. SweetAlert2 -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  <!-- 5. Hover.css -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
-  
-  <!-- Estilos Personalizados -->
-  <style>
-    :root {
-      --admin-sidebar: #1a1a2e;
-      --admin-main: #16213e;
-      --admin-accent: #0f3460;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel Administrativo{% endblock %}</title>
     
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      overflow-x: hidden;
-    }
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animations -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Alpine JS -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- SweetAlert2 Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- DataTables for Tailwind -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     
-    /* Sidebar Glassmorphism */
-    .admin-sidebar {
-      background: rgba(26, 26, 46, 0.85) !important;
-      backdrop-filter: blur(8px);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.3s ease;
-    }
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { 
+                        primary: '#10b981', 
+                        secondary: '#065f46',
+                        accent: '#fbbf24',
+                        adminBg: '#0f172a',
+                        adminCard: '#1e293b'
+                    },
+                    borderRadius: { '4xl': '2rem', '5xl': '3rem' }
+                }
+            }
+        }
+    </script>
     
-    /* Efecto hover para items del menú */
-    .nav-link-admin {
-      border-radius: 6px;
-      transition: all 0.3s ease;
-      margin: 2px 0;
-    }
-    .nav-link-admin:hover {
-      background: rgba(15, 52, 96, 0.7) !important;
-      transform: translateX(5px);
-    }
-    
-    /* Main Content */
-    .admin-main {
-      background: linear-gradient(135deg, var(--admin-main), #0f0c29);
-    }
-    
-    /* Tarjetas Neumorfismo Oscuro */
-    .card-admin {
-      background: var(--admin-accent);
-      border: none;
-      border-radius: 12px;
-      box-shadow:  8px 8px 16px #0b1120, 
-                  -8px -8px 16px #1e325e;
-      transition: all 0.3s ease;
-    }
-    .card-admin:hover {
-      transform: translateY(-5px);
-    }
-    
-    /* Scrollbar Personalizada */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: var(--admin-accent);
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555;
-    }
-  </style>
-  
-  {% block styles %}{% endblock %}
+    <style>
+        [x-cloak] { display: none !important; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        
+        /* Modding datatables to fit dark theme */
+        .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+        table.dataTable tbody tr { background-color: transparent; }
+        table.dataTable.stripe>tbody>tr.odd>*, table.dataTable.display>tbody>tr.odd>* { box-shadow: none; }
+        .dataTables_wrapper .dataTables_paginate .paginate_button { color: #cbd5e1 !important; border: none; }
+    </style>
+    {% block styles %}{% endblock %}
 </head>
-<body class="bg-dark text-light">
+<body class="bg-adminBg text-slate-300 font-sans antialiased flex h-screen overflow-hidden selection:bg-primary/30 selection:text-white" x-data="{ sidebarOpen: false }">
+    <!-- Mobile Backdrop -->
+    <div x-show="sidebarOpen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden cursor-pointer" @click="sidebarOpen = false" style="display: none;"></div>
 
-  <div class="d-flex flex-nowrap min-vh-100">
-    <!-- Sidebar con animaciones -->
-    <div class="admin-sidebar p-3 text-white" style="width: 250px;" data-aos="fade-right">
-      <h4 class="mb-4 animate__animated animate__fadeIn">
-        <i class="fas fa-cogs me-2"></i>Admin Panel
-      </h4>
-      <ul class="nav flex-column">
-      <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="200">
-        <a href="{{ url_for('dashboard.index') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-          <i class="fas fa-tachometer-alt me-2"></i>Dashboard
-        </a>
-      </li>
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="150">
-        <a href="{{ url_for('admin.lista_usuarios') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-            <i class="fas fa-users me-2"></i>Usuarios
-        </a>
-        </li>
+    <!-- Ultra-Premium Glowing Sidebar -->
+    <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0 text-center w-24'" class="fixed lg:relative top-0 left-0 w-72 h-full z-50 lg:z-40 transition-all duration-300 ease-in-out bg-gradient-to-b from-slate-900 via-[#131e32] to-[#0b2823] border-r border-white/10 flex flex-col shadow-[20px_0_50px_rgba(0,0,0,0.5)] lg:shadow-none">
+        
+        <!-- Botón de cerrar (solo móvil) -->
+        <button @click="sidebarOpen = false" class="absolute top-6 right-4 lg:hidden w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 hover:text-white hover:bg-rose-500 transition z-50">
+            <i class="fas fa-times"></i>
+        </button>
 
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="200">
-          <a href="{{ url_for('producto.index') }}"class="nav-link text-light nav-link-admin hvr-underline-from-center">
-            <i class="fas fa-box-open me-2"></i>Productos
-          </a>
-        </li> 
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="250">
-          <a href="{{ url_for('categoria.index') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-            <i class="fas fa-tags me-2"></i>Categorías
-          </a>
-        </li>
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="250">
-          <a href="{{ url_for('proveedor.index') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-            <i class="fas fa-truck me-2"></i>Proveedores
-          </a>
-        </li>
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="300">
-          <a href="{{ url_for('admin_pedido.lista') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-            <i class="fas fa-clipboard-list me-2"></i>Pedidos
-          </a>
-        </li>
-      <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="350">
-        <a href="{{ url_for('mensaje.admin_lista') }}" class="nav-link text-light nav-link-admin hvr-underline-from-center">
-          <i class="fas fa-envelope me-2"></i>Mensajes
-        </a>
-      </li>        
-        <li><hr class="text-secondary my-2"></li>
-        <li class="nav-item animate__animated animate__fadeInLeft" data-aos-delay="400">
-          <a href="{{ url_for('usuario.login') }}" class="nav-link text-danger nav-link-admin hvr-grow">
-            <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
-          </a>
-        </li>
-      </ul>
+        <div class="h-24 flex items-center justify-center border-b border-white/5 relative overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-emerald-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-emerald-400 flex items-center justify-center text-white shadow-[0_0_20px_rgba(16,185,129,0.5)] transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" :class="!sidebarOpen && 'mx-auto'">
+                <i class="fas fa-leaf text-2xl drop-shadow-md"></i>
+            </div>
+            
+            <span x-show="sidebarOpen" x-transition.opacity.duration.300ms class="ml-4 text-2xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-emerald-100 to-slate-400 drop-shadow-lg">Panel</span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-8 px-4 space-y-3 custom-scrollbar">
+            {% set nav_links = [
+                ('Dashboard', 'fa-tachometer-alt', url_for('dashboard.index')),
+                ('Usuarios', 'fa-users', url_for('admin.lista_usuarios')),
+                ('Productos', 'fa-box-open', url_for('producto.index')),
+                ('Categorías', 'fa-tags', url_for('categoria.index')),
+                ('Proveedores', 'fa-truck', url_for('proveedor.index')),
+                ('Pedidos', 'fa-clipboard-list', url_for('admin_pedido.lista')),
+                ('Mensajes', 'fa-envelope', url_for('mensaje.admin_lista'))
+            ] %}
+            
+            {% for label, icon, link in nav_links %}
+            <a href="{{ link }}" class="relative flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 overflow-hidden group {{ 'bg-gradient-to-r from-primary/30 to-emerald-500/5 border-l-4 border-l-primary shadow-[inset_20px_0_50px_rgba(16,185,129,0.1),0_0_20px_rgba(16,185,129,0.3)] text-white' if request.path == link else 'text-slate-400 hover:text-white border-l-4 border-transparent hover:bg-slate-800/60 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)]' }}">
+                <div class="relative flex items-center justify-center w-8">
+                    <i class="fas {{ icon }} text-xl transition-transform duration-300 group-hover:scale-110 {{ 'text-primary drop-shadow-[0_0_10px_rgba(16,185,129,0.8)]' if request.path == link else 'group-hover:text-emerald-400 group-hover:drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]' }}"></i>
+                </div>
+                <span x-show="sidebarOpen" class="ml-4 font-bold text-[15px] z-10 tracking-wide">{{ label }}</span>
+                
+                <!-- Tooltip for collapsed state -->
+                {% if not sidebarOpen %}
+                <span class="absolute left-16 bg-slate-800 border border-slate-700 text-white text-xs font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 whitespace-nowrap transition-all duration-300 z-50 shadow-[0_0_20px_rgba(0,0,0,0.5)] pointer-events-none translate-x-2 group-hover:translate-x-0 hidden lg:block">{{ label }}</span>
+                {% endif %}
+            </a>
+            {% endfor %}
+            
+        </nav>
+
+        <div class="p-6 border-t border-white/5 bg-gradient-to-b from-transparent to-slate-900/80">
+            <a href="{{ url_for('usuario.logout') }}" class="relative flex items-center px-4 py-3.5 rounded-2xl transition-all duration-300 text-rose-400 hover:text-white hover:bg-gradient-to-r hover:from-rose-500/80 hover:to-red-600/80 hover:shadow-[0_0_20px_rgba(244,63,94,0.4)] group overflow-hidden">
+                <div class="relative flex items-center justify-center w-8">
+                    <i class="fas fa-power-off text-xl transition-transform duration-300 group-hover:scale-110 group-hover:rotate-90"></i>
+                </div>
+                <span x-show="sidebarOpen" class="ml-4 font-bold text-[15px] tracking-wide">Cerrar Sesión</span>
+                {% if not sidebarOpen %}
+                <span class="absolute left-16 bg-rose-900 border border-rose-700 text-rose-100 text-xs font-bold px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 whitespace-nowrap transition-all duration-300 z-50 shadow-[0_0_20px_rgba(244,63,94,0.3)] pointer-events-none translate-x-4 group-hover:translate-x-0 hidden lg:block">Cerrar Sesión</span>
+                {% endif %}
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Context -->
+    <div class="flex-1 flex flex-col h-full w-full transition-all duration-300 relative overflow-hidden" :class="sidebarOpen ? 'lg:ml-0' : 'lg:ml-0'">
+        <!-- Decoration element -->
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -mr-40 -mt-40 pointer-events-none"></div>
+        
+        <!-- Header Topbar -->
+        <header class="h-20 bg-adminBg/60 backdrop-blur-xl border-b border-slate-700/50 flex flex-row items-center justify-between px-8 z-30 sticky top-0">
+            <button @click="sidebarOpen = !sidebarOpen" class="w-10 h-10 rounded-xl bg-slate-800/80 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 shadow-md hover:shadow-primary/20 border border-slate-700/50 transition-all duration-300 hover:scale-105 active:scale-95">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="flex items-center space-x-4 bg-slate-800/40 px-4 py-2 rounded-2xl border border-slate-700/50">
+                <span class="text-sm font-bold text-slate-400 hidden sm:block">Admin: <span class="text-white">{{ session.get('user', 'Administrador') }}</span></span>
+                <img src="https://ui-avatars.com/api/?name={{ session.get('user', 'Ad') }}&background=10b981&color=fff" class="w-10 h-10 rounded-xl border-2 border-primary/50 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+            </div>
+        </header>
+
+        <!-- Dynamic Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-8 relative z-10 custom-scrollbar">
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <script>
+                            document.addEventListener('DOMContentLoaded', () => {
+                                const Toast = Swal.mixin({
+                                    toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true, background: '#1e293b', color: '#fff',
+                                    customClass: { popup: 'rounded-2xl border border-slate-700 shadow-2xl' }
+                                });
+                                Toast.fire({ icon: '{{ "success" if category == "success" else "error" }}', title: '{{ message }}' });
+                            });
+                        </script>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+
+        </main>
     </div>
 
-    <!-- Main Content -->
-    <main class="flex-fill p-4 admin-main">
-      <!-- Notificaciones mejoradas -->
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% for category, message in messages %}
-          <script>
-            document.addEventListener('DOMContentLoaded', function() {
-              Swal.fire({
-                position: 'top-end',
-                icon: '{{ "success" if category == "success" else "error" }}',
-                title: '{{ message }}',
-                showConfirmButton: false,
-                timer: 3000,
-                background: '#16213e',
-                color: '#fff',
-                backdrop: 'rgba(0,0,0,0.7)'
-              });
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+        
+        $(document).ready(function() {
+            $('.data-table').DataTable({
+                language: { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json' },
+                responsive: true
             });
-          </script>
-        {% endfor %}
-      {% endwith %}
-      
-      {% block content %}{% endblock %}
-    </main>
-  </div>
+        });
 
-  <!-- Scripts Esenciales -->
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- jQuery (requerido para DataTables) -->
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- DataTables -->
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-  <!-- SweetAlert2 -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- AOS (Animaciones) -->
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>AOS.init({ duration: 800 });</script>
-  <!-- Chart.js (para gráficos en dashboard) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        const socket = io();
+        socket.on('mostrar_alerta', (data) => {
+            const audio = new Audio("{{ url_for('static', filename='sounds/notification.wav') }}");
+            audio.play().catch(e => console.log('Audio error:', e));
 
-  <!-- Scripts Base -->
-  <script>
-    // Inicializar DataTables en todas las tablas
-    $(document).ready(function() {
-      $('.data-table').DataTable({
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
-        },
-        responsive: true
-      });
-    });
-    
-    // Confirmación para acciones críticas
-    function confirmAction(title, text, action) {
-      Swal.fire({
-        title: title,
-        text: text,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#0f3460',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
-        background: '#16213e',
-        color: '#fff'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          if (typeof action === 'function') {
-            action();
-          }
+            Swal.fire({
+                toast: true, position: 'top-end', icon: data.type === 'success' ? 'success' : 'info',
+                title: data.message, showConfirmButton: false, timer: 4000,
+                background: '#1e293b', color: '#fff',
+                customClass: { popup: 'border border-primary border-l-4 shadow-[0_0_20px_rgba(16,185,129,0.3)] rounded-xl' }
+            });
+        });
+        
+        function confirmAction(title, text, action) {
+            Swal.fire({
+                title: title, text: text, icon: 'warning', showCancelButton: true,
+                confirmButtonColor: '#0f3460', cancelButtonColor: '#d33',
+                confirmButtonText: 'Confirmar', cancelButtonText: 'Cancelar',
+                background: '#1e293b', color: '#fff',
+                customClass: { popup: 'rounded-3xl border border-slate-700' }
+            }).then((result) => { if (result.isConfirmed && typeof action === 'function') action(); });
         }
-      });
-    }
-  </script>
-  
-  {% block scripts %}{% endblock %}
+    </script>
+    {% block scripts %}{% endblock %}
 </body>
 </html>

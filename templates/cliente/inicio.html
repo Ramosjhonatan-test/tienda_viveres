@@ -2,275 +2,200 @@
 {% block title %}Inicio{% endblock %}
 {% block content %}
 
-<style>
-  body {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    background-attachment: fixed;
-  }
-
-  .glass-card {
-    background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-  }
-
-  .glass-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(110, 142, 251, 0.3);
-  }
-
-  .btn-glow {
-    background: linear-gradient(90deg, #8a2be2, #4f94cd);
-    border: none;
-    color: white;
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 0 12px rgba(138, 43, 226, 0.6);
-  }
-
-  .btn-glow:hover {
-    box-shadow: 0 0 20px rgba(138, 43, 226, 0.9);
-    transform: scale(1.03);
-  }
-
-  .hero-banner {
-    background: url('/static/img/futurista.jpg') center center / cover no-repeat;
-    height: 300px;
-    position: relative;
-    border-radius: 16px;
-    overflow: hidden;
-    margin-bottom: 3rem;
-  }
-
-  .hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0,0,0,0.6);
-  }
-
-  .text-neon {
-    background: linear-gradient(90deg, #6e8efb, #a777e3);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .card-title, .fs-5 {
-    color: #ffffff;
-  }
-
-  .text-muted {
-    color: #e0e0e0 !important;
-  }
-
-  
-</style>
-
-<div class="container mt-4">
-  <!-- Banner de bienvenida -->
-  <div class="hero-banner">
-    <div class="hero-content text-center">
-      <h1 class="fw-bold display-4 mb-2">¡Bienvenido{{ ', ' + session['nombre'] if session.get('nombre') else '' }}!</h1>
-      <p class="lead">Explorá lo mejor de la tecnología y diseño futurista</p>
-      <a href="#productos" class="btn btn-glow btn-lg mt-2">
-        <i class="fas fa-rocket me-1"></i> Ver productos
-      </a>
+<!-- Hero Banner -->
+<div class="relative rounded-3xl overflow-hidden mb-12 shadow-2xl h-[300px] border border-subtle" data-aos="fade-down">
+    <img src="/static/img/futurista.jpg" alt="Bienvenidos" class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-blue-900/40 mix-blend-multiply"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+    
+    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 drop-shadow-lg tracking-tight">
+            ¡Bienvenido{{ ', ' ~ session['nombre'] if session.get('nombre') else '' }}!
+        </h1>
+        <p class="text-lg md:text-xl text-blue-100 font-medium max-w-2xl drop-shadow-md mb-6">
+            Descubre nuestra selección premium de productos con tecnología de punta y calidad insuperable.
+        </p>
+        <a href="#catalogo" class="px-8 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold rounded-full shadow-lg shadow-blue-500/30 transform hover:-translate-y-1 transition duration-300 flex items-center">
+            <i class="fas fa-rocket mr-2"></i> Explorar Catálogo
+        </a>
     </div>
-  </div>
-
-  <!-- Título y contador -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 id="productos" class="fw-bold text-neon">Nuestros Productos</h3>
-    <span id="contador-resultados" class="badge bg-light text-dark rounded-pill px-3 py-2 shadow-sm">
-      <i class="fas fa-box-open me-1"></i> {{ productos|length }} disponibles
-    </span>
-  </div>
-  <form action="{{ url_for('cliente.inicio_busqueda') }}" method="get" class="input-group mb-4" style="max-width: 500px;">
-  <input type="text" id="buscador" class="form-control bg-dark text-white mb-4" placeholder="Buscar producto..." autocomplete="off">
-  <button class="btn btn-glow" type="submit"stile="border-radius: 0 20px 20px 0; min-height: 38px;">
-    <i class="fas fa-search"></i>
-  </button>
-</form>
-<div class="d-flex flex-wrap gap-2 mb-4">
-  <button class="btn btn-outline-light btn-sm categoria-btn active" data-id="0">Todos</button>
-  {% for c in categorias %}
-    <button class="btn btn-outline-light btn-sm categoria-btn" data-id="{{ c.id }}">{{ c.nombre }}</button>
-  {% endfor %}
 </div>
 
-  <!-- Catálogo -->
-  <div class="row g-4">
-    {% for p in productos %}
-    <div class="col-md-4 col-lg-3">
-      <div class="card glass-card h-100">
-        <div class="product-image-container p-3" style="height: 200px; display: flex; justify-content: center; align-items: center;">
-          <img src="{{ p.imagen }}" alt="{{ p.nombre }}" class="img-fluid" style="max-height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';">
-        </div>
-
-        <div class="card-body d-flex flex-column">
-          <h5 class="card-title fw-bold">{{ p.nombre }}</h5>
-          <p class="card-text text-muted small">{{ p.descripcion|default('Sin descripción')|truncate(100) }}</p>
-
-          <div class="mb-2">
-            {% if p.descuento %}
-              <div>
-                <span class="text-decoration-line-through text-muted small">Bs {{ '%.2f'|format(p.precio) }}</span>
-                <span class="fs-5 fw-bold">Bs {{ '%.2f'|format(p.precio * (1 - p.descuento/100)) }}</span>
-              </div>
-            {% else %}
-              <span class="fs-5 fw-bold">Bs {{ '%.2f'|format(p.precio) }}</span>
-            {% endif %}
-          </div>
-
-          <div class="d-flex justify-content-between align-items-center small mb-2">
-            <span class="badge bg-light text-dark">
-              <i class="fas fa-cubes me-1"></i> {{ p.stock }} en stock
+<!-- Buscador y Categorías -->
+<div id="catalogo" class="mb-8 scroll-mt-24" data-aos="fade-up">
+    <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+        
+        <div class="flex items-center space-x-3">
+            <h2 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Nuestro Catálogo</h2>
+            <span id="contador-resultados" class="px-3 py-1 rounded-full bg-secondary-theme border border-subtle text-muted text-sm font-bold flex items-center">
+                <i class="fas fa-boxes text-blue-500 mr-2"></i> {{ productos|length }} artículos
             </span>
-            {% if p.stock <= 5 and p.stock > 0 %}
-              <span class="badge bg-warning text-dark">Últimas unidades</span>
-            {% endif %}
-          </div>
-
-          <form action="{{ url_for('carrito.carrito_agregar') }}" method="post" class="d-flex align-items-center gap-2 mt-auto">
-            <input type="hidden" name="producto_id" value="{{ p.id }}">
-            <div class="input-group input-group-sm" style="width: 110px;">
-              <button class="btn btn-outline-light" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" {% if p.stock == 0 %}disabled{% endif %}>-</button>
-              <input type="number" name="cantidad" value="1" min="1" max="{{ p.stock }}" class="form-control text-center shadow-none bg-dark text-white border-0" {% if p.stock == 0 %}disabled{% endif %}>
-              <button class="btn btn-outline-light" type="button" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" {% if p.stock == 0 %}disabled{% endif %}>+</button>
-            </div>
-            <button type="submit" class="btn btn-glow btn-sm flex-grow-1" {% if p.stock == 0 %}disabled{% endif %}>
-              <i class="fas fa-cart-plus me-1"></i> Añadir
-            </button>
-          </form>
         </div>
-      </div>
+
+        <form action="{{ url_for('cliente.inicio_busqueda') }}" method="get" class="w-full md:w-auto max-w-md">
+            <div class="relative rounded-2xl shadow-sm border border-subtle focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500 transition-all bg-secondary-theme/80 overflow-hidden flex">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-muted"></i>
+                </div>
+                <input type="text" id="buscador" name="q" class="block w-full pl-11 pr-4 py-3 bg-transparent focus:outline-none text-main placeholder-muted font-medium" placeholder="Buscar producto..." autocomplete="off">
+            </div>
+        </form>
+    </div>
+
+    <!-- Filtros de Categoría -->
+    <div class="flex flex-wrap gap-2 mb-8">
+        <button class="categoria-btn px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 border border-blue-500 bg-blue-500 text-white shadow-lg shadow-blue-500/30" data-id="0">
+            Todos los Productos
+        </button>
+        {% for c in categorias %}
+        <button class="categoria-btn px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 border border-subtle bg-secondary-theme text-muted hover:bg-card-theme hover:text-main" data-id="{{ c.id }}">
+            {{ c.nombre }}
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Grilla de Productos -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="contenedor-productos">
+    {% for p in productos %}
+    <div class="bg-card-theme rounded-3xl border border-subtle shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 transition duration-300 group" data-aos="fade-up" data-aos-delay="{{ loop.index0 * 50 }}">
+        
+        <div class="relative h-56 bg-slate-800/50 p-4 flex items-center justify-center overflow-hidden">
+            {% if p.stock <= 5 and p.stock > 0 %}
+            <div class="absolute top-4 right-4 z-10 px-2.5 py-1 bg-rose-500/20 border border-rose-500/50 text-rose-400 text-xs font-bold rounded-lg backdrop-blur-sm">
+                ¡Últimos!
+            </div>
+            {% endif %}
+            <img src="{{ p.imagen }}" alt="{{ p.nombre }}" class="max-h-full object-contain group-hover:scale-110 transition duration-500 drop-shadow-xl" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';">
+        </div>
+
+        <div class="p-5 flex-grow flex flex-col">
+            <h3 class="text-xl font-bold text-main mb-2 leading-tight">{{ p.nombre }}</h3>
+            <p class="text-muted text-sm mb-4 line-clamp-2">
+                {{ p.descripcion|default('Sin descripción detallada') }}
+            </p>
+
+            <div class="mt-auto">
+                <div class="flex items-end justify-between mb-4 border-b border-subtle pb-4">
+                    <div>
+                        <span class="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Precio</span>
+                        <span class="text-2xl font-black text-emerald-400">Bs. {{ '%.2f'|format(p.precio) }}</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Stock</span>
+                        <span class="text-sm font-bold {{ 'text-rose-400' if p.stock == 0 else 'text-main' }} border border-subtle rounded-lg px-2 py-1 bg-secondary-theme">
+                            {{ p.stock }} uni.
+                        </span>
+                    </div>
+                </div>
+
+                <form action="{{ url_for('carrito.carrito_agregar') }}" method="post" class="flex gap-2">
+                    <input type="hidden" name="producto_id" value="{{ p.id }}">
+                    
+                    <div class="relative rounded-xl border border-subtle bg-secondary-theme flex w-24 overflow-hidden">
+                        <button type="button" class="px-2 text-muted hover:text-main hover:bg-card-theme transition font-bold" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" {% if p.stock == 0 %}disabled{% endif %}>-</button>
+                        <input type="number" name="cantidad" value="1" min="1" max="{{ p.stock }}" class="w-full text-center bg-transparent text-main font-bold text-sm focus:outline-none focus:ring-0 appearance-none -webkit-appearance-none" style="-moz-appearance: textfield;" {% if p.stock == 0 %}disabled{% endif %}>
+                        <button type="button" class="px-2 text-muted hover:text-main hover:bg-card-theme transition font-bold" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" {% if p.stock == 0 %}disabled{% endif %}>+</button>
+                    </div>
+
+                    <button type="submit" class="flex-grow py-2 {% if p.stock > 0 %}bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25{% else %}bg-slate-700 text-slate-500 cursor-not-allowed{% endif %} font-bold rounded-xl transition-all flex items-center justify-center" {% if p.stock == 0 %}disabled{% endif %}>
+                        <i class="fas fa-cart-plus mr-2"></i> Añadir
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
     {% endfor %}
-  </div>
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.glass-card').forEach((card, i) => {
-      card.style.opacity = 0;
-      card.style.transform = 'translateY(20px)';
-      card.style.transition = `all 0.4s ease ${(i * 0.05)}s`;
-      setTimeout(() => {
-        card.style.opacity = 1;
-        card.style.transform = 'translateY(0)';
-      }, 100);
-    });
-  });
-</script>
-<script>
 document.addEventListener('DOMContentLoaded', () => {
-  const input = document.getElementById('buscador');
-  const contenedor = document.querySelector('.row.g-4');
-  const contador = document.getElementById('contador-resultados');
+    const input = document.getElementById('buscador');
+    const contenedor = document.getElementById('contenedor-productos');
+    const contador = document.getElementById('contador-resultados');
 
-  input.addEventListener('input', () => {
-    const query = input.value.trim();
-    fetch(`/cliente/api/buscar?q=${encodeURIComponent(query)}`)
-      .then(res => res.json())
-      .then(data => {
-        // 🟢 Actualizar contador
-        if (contador) {
-          contador.innerHTML = `
-            <i class="fas fa-box-open me-1"></i> ${data.length} disponible${data.length === 1 ? '' : 's'}
-          `;
-        }
-
-        // 🔄 Limpiar productos anteriores
-        contenedor.innerHTML = '';
-
-        if (data.length === 0) {
-          contenedor.innerHTML = '<p class="text-white text-center w-100">No se encontraron productos.</p>';
-          return;
-        }
-
-        // 🧱 Agregar productos nuevos
-        data.forEach(p => {
-          const card = document.createElement('div');
-          card.className = 'col-md-4 col-lg-3';
-          card.innerHTML = `
-            <div class="card glass-card h-100">
-              <div class="product-image-container p-3" style="height: 200px; display: flex; justify-content: center; align-items: center;">
-                <img src="${p.imagen}" alt="${p.nombre}" class="img-fluid" style="max-height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';">
-              </div>
-              <div class="card-body d-flex flex-column">
-                <h5 class="card-title fw-bold">${p.nombre}</h5>
-                <p class="card-text text-muted small">${p.descripcion || 'Sin descripción'}</p>
-                <span class="fs-5 fw-bold mb-2">Bs ${p.precio.toFixed(2)}</span>
-                <span class="badge bg-light text-dark mb-3"><i class="fas fa-cubes me-1"></i> ${p.stock} en stock</span>
-                <form action="/carrito/agregar" method="post" class="d-flex align-items-center gap-2 mt-auto">
-                  <input type="hidden" name="producto_id" value="${p.id}">
-                  <input type="number" name="cantidad" value="1" min="1" max="${p.stock}" class="form-control form-control-sm bg-dark text-white border-0" style="width: 80px;" ${p.stock === 0 ? 'disabled' : ''}>
-                  <button type="submit" class="btn btn-glow btn-sm flex-grow-1" ${p.stock === 0 ? 'disabled' : ''}>
-                    <i class="fas fa-cart-plus me-1"></i> Añadir
-                  </button>
-                </form>
-              </div>
+    const renderCard = (p) => {
+        return `
+        <div class="bg-card-theme rounded-3xl border border-subtle shadow-xl overflow-hidden flex flex-col transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/10 transition duration-300 group">
+            <div class="relative h-56 bg-secondary-theme/50 p-4 flex items-center justify-center overflow-hidden">
+                ${p.stock <= 5 && p.stock > 0 ? '<div class="absolute top-4 right-4 z-10 px-2.5 py-1 bg-rose-500/20 border border-rose-500/50 text-rose-400 text-xs font-bold rounded-lg">¡Últimos!</div>' : ''}
+                <img src="${p.imagen}" alt="${p.nombre}" class="max-h-full object-contain group-hover:scale-110 transition duration-500 drop-shadow-xl" onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200?text=No+Image';">
             </div>
-          `;
-          contenedor.appendChild(card);
+            <div class="p-5 flex-grow flex flex-col">
+                <h3 class="text-xl font-bold text-main mb-2 leading-tight">${p.nombre}</h3>
+                <p class="text-muted text-sm mb-4 line-clamp-2">${p.descripcion || 'Sin descripción detallada'}</p>
+                <div class="mt-auto">
+                    <div class="flex items-end justify-between mb-4 border-b border-subtle pb-4">
+                        <div>
+                            <span class="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Precio</span>
+                            <span class="text-2xl font-black text-emerald-400">Bs. ${p.precio.toFixed(2)}</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs font-bold text-muted uppercase tracking-wider block mb-1">Stock</span>
+                            <span class="text-sm font-bold ${p.stock === 0 ? 'text-rose-400' : 'text-main'} border border-subtle rounded-lg px-2 py-1 bg-secondary-theme">${p.stock} uni.</span>
+                        </div>
+                    </div>
+                    <form action="/carrito/agregar" method="post" class="flex gap-2">
+                        <input type="hidden" name="producto_id" value="${p.id}">
+                        <div class="relative rounded-xl border border-subtle bg-secondary-theme flex w-24 overflow-hidden">
+                            <button type="button" class="px-2 text-muted hover:text-main hover:bg-card-theme transition font-bold" onclick="this.parentNode.querySelector('input[type=number]').stepDown()" ${p.stock === 0 ? 'disabled' : ''}>-</button>
+                            <input type="number" name="cantidad" value="1" min="1" max="${p.stock}" class="w-full text-center bg-transparent text-main font-bold text-sm focus:outline-none appearance-none -webkit-appearance-none" style="-moz-appearance: textfield;" ${p.stock === 0 ? 'disabled' : ''}>
+                            <button type="button" class="px-2 text-muted hover:text-main hover:bg-card-theme transition font-bold" onclick="this.parentNode.querySelector('input[type=number]').stepUp()" ${p.stock === 0 ? 'disabled' : ''}>+</button>
+                        </div>
+                        <button type="submit" class="flex-grow py-2 ${p.stock > 0 ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg shadow-blue-500/25' : 'bg-slate-700 text-slate-500 cursor-not-allowed'} font-bold rounded-xl transition-all flex items-center justify-center" ${p.stock === 0 ? 'disabled' : ''}>
+                            <i class="fas fa-cart-plus mr-2"></i> Añadir
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>`;
+    };
+
+    input.addEventListener('input', () => {
+        const query = input.value.trim();
+        fetch(`/cliente/api/buscar?q=${encodeURIComponent(query)}`)
+            .then(res => res.json())
+            .then(data => {
+                if(contador) contador.innerHTML = `<i class="fas fa-boxes text-blue-500 mr-2"></i> ${data.length} artículos`;
+                contenedor.innerHTML = '';
+                if(data.length === 0) {
+                    contenedor.innerHTML = `<div class="col-span-full py-12 text-center text-muted bg-secondary-theme/50 rounded-3xl border border-subtle"><i class="fas fa-box-open text-4xl mb-4 opacity-50"></i><p>No se encontraron productos.</p></div>`;
+                    return;
+                }
+                data.forEach(p => {
+                    const div = document.createElement('div');
+                    div.innerHTML = renderCard(p);
+                    contenedor.appendChild(div.firstElementChild);
+                });
+            });
+    });
+
+    document.querySelectorAll('.categoria-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const id = btn.getAttribute('data-id');
+            document.querySelectorAll('.categoria-btn').forEach(b => {
+                b.className = "categoria-btn px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 border border-subtle bg-secondary-theme text-muted hover:bg-card-theme hover:text-main";
+            });
+            btn.className = "categoria-btn px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200 border border-blue-500 bg-blue-500 text-white shadow-lg shadow-blue-500/30";
+
+            fetch(`/cliente/api/filtrar_categoria?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(contador) contador.innerHTML = `<i class="fas fa-boxes text-blue-500 mr-2"></i> ${data.length} artículos`;
+                    contenedor.innerHTML = '';
+                    if(data.length === 0) {
+                        contenedor.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 bg-slate-800/50 rounded-3xl border border-slate-700"><i class="fas fa-box-open text-4xl mb-4 opacity-50"></i><p>No hay productos en esta categoría.</p></div>`;
+                        return;
+                    }
+                    data.forEach(p => {
+                        const div = document.createElement('div');
+                        div.innerHTML = renderCard(p);
+                        contenedor.appendChild(div.firstElementChild);
+                    });
+                });
         });
-      })
-      .catch(error => {
-        console.error("Error al buscar productos:", error);
-        contenedor.innerHTML = '<p class="text-white text-center w-100">Hubo un error al buscar productos.</p>';
-        if (contador) {
-          contador.innerHTML = `<i class="fas fa-box-open me-1"></i> 0 disponibles`;
-        }
-      });
-  });
+    });
 });
 </script>
-<script>
-document.querySelectorAll('.categoria-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.getAttribute('data-id');
-
-    // Toggle visual
-    document.querySelectorAll('.categoria-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    // Buscar productos por categoría
-    fetch(`/cliente/api/filtrar_categoria?id=${id}`)
-      .then(res => res.json())
-      .then(data => {
-        const contenedor = document.querySelector('.row.g-4');
-        const contador = document.getElementById('contador-resultados');
-
-        // Actualizar contador
-        if (contador) {
-          contador.innerHTML = `
-            <i class="fas fa-box-open me-1"></i> ${data.length} disponible${data.length === 1 ? '' : 's'}
-          `;
-        }
-
-        // Mostrar productos
-        contenedor.innerHTML = '';
-        if (data.length === 0) {
-          contenedor.innerHTML = '<p class="text-white text-center w-100">No hay productos en esta categoría.</p>';
-          return;
-        }
-
-        data.forEach(p => {
-          const card = document.createElement('div');
-          card.className = 'col-md-4 col-lg-3';
-          card.innerHTML = `...`; // igual al render del buscador
-          contenedor.appendChild(card);
-        });
-      });
-  });
-});
-</script>
-
-
 
 {% endblock %}
