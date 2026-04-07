@@ -119,19 +119,13 @@ def handle_connect():
 def handle_notification(data):
     emit('mostrar_alerta', data, broadcast=True)
 
+# Variable para que Vercel encuentre la app
+app_vercel = app
+
 # Ejecución local
 if __name__ == "__main__":
     with app.app_context():
-        db.create_all()
-
-        if not Usuario.query.filter_by(username='admin').first():
-            admin = Usuario(
-                nombre='jhonatan',
-                username='admin',
-                password='admin',
-                rol='admin'
-            )
-            admin.save()
-            print("✔ Usuario administrador creado (usuario: admin, clave: admin)")
+        # db.create_all() # Ya migraste a Render, no es necesario crear todo de nuevo
+        pass
 
     socketio.run(app, debug=True)
