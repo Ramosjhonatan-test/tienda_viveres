@@ -47,7 +47,8 @@ def enviar_factura_por_correo(pedido_id):
         return redirect(url_for('admin_pedido.detalle', pedido_id=pedido_id))
 
     try:
-        ruta_pdf = f"static/{pedido.factura.archivo_pdf.replace('\\', '/')}"
+        archivo_limpio = pedido.factura.archivo_pdf.replace('\\', '/')
+        ruta_pdf = f"static/{archivo_limpio}"
         asunto = f"Factura Pedido #{pedido.id}"
         mensaje = (
                 f"🧾 ¡Hola {pedido.usuario.nombre}!\n\n"
