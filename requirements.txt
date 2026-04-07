@@ -7,7 +7,11 @@ Flask-WTF==1.2.2
 psycopg2-binary==2.9.10
 python-dotenv==1.0.1
 pytz==2025.2
-xhtml2pdf==0.2.16
 SQLAlchemy==2.0.41
 Werkzeug==3.1.3
 gunicorn==23.0.0
+# Versiones específicas para evitar pycairo en Vercel
+reportlab==3.6.13
+xhtml2pdf==0.2.8
+lxml==4.9.4
+Pillow==10.2.0
