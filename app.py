@@ -1,6 +1,3 @@
-import eventlet
-eventlet.monkey_patch()
-
 import os
 import time
 from flask import Flask, request, render_template, session
@@ -44,11 +41,10 @@ ahora = datetime.now(la_paz)
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "supersecreto_dev")
 
-# 👉 Configuración de Base de Datos (usando .env)
+# 👉 Configuración de Base de Datos
 database_url = os.getenv("DATABASE_URL")
 
 if database_url:
-    # Fix for Render (postgres:// -> postgresql://)
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
     app.config["SQLALCHEMY_DATABASE_URI"] = f"{database_url}?client_encoding=utf8"
@@ -62,21 +58,20 @@ else:
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# 👉 Configuración de Correo para Producción (Render)
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
+# 👉 Configuración de Correo (Volvemos a la configuración estándar que te funcionaba)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_DEFAULT_SENDER")
-app.config['MAIL_DEBUG'] = True  # Para ver más logs en Render
 
 # Inicialización
 mail.init_app(app)
 db.init_app(app)
 migrate = Migrate(app, db)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Blueprints
 app.register_blueprint(usuario_controller.usuario_bp)
@@ -115,7 +110,7 @@ def home():
     productos = Producto.query.order_by(Producto.id.desc()).all()
     return render_template("index.html", productos=productos)
 
-# Eventos de SocketIO para tiempo real
+# Eventos de SocketIO
 @socketio.on('connect')
 def handle_connect():
     print('Cliente conectado al socket')
@@ -124,13 +119,7 @@ def handle_connect():
 def handle_notification(data):
     emit('mostrar_alerta', data, broadcast=True)
 
-# Variable para que Vercel encuentre la app
 app_vercel = app
 
-# Ejecución local
 if __name__ == "__main__":
-    with app.app_context():
-        # db.create_all() # Ya migraste a Render, no es necesario crear todo de nuevo
-        pass
-
     socketio.run(app, debug=True)

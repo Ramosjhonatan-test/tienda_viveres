@@ -37,20 +37,19 @@ def detalle(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
     return render_template('admin/pedidos/detalle.html', pedido=pedido)
 
+from threading import Thread
+
 def send_async_email(app, msg):
     with app.app_context():
         try:
-            # Importamos mail aquí para asegurar que use el contexto correcto
-            from extensions import mail
             mail.send(msg)
-            print("📩 Correo enviado exitosamente en segundo plano (SocketIO Task).")
+            print("📩 Correo enviado exitosamente en segundo plano.")
         except Exception as e:
             print(f"❌ Error al enviar correo en segundo plano: {e}")
 
 @admin_pedido_bp.route('/enviar-correo/<int:pedido_id>')
 def enviar_factura_por_correo(pedido_id):
     from models.pedido import Pedido
-    from app import socketio  # Importamos socketio para la tarea de fondo
     pedido = Pedido.query.get_or_404(pedido_id)
 
     if not pedido.usuario.correo or not pedido.factura:
@@ -81,8 +80,8 @@ def enviar_factura_por_correo(pedido_id):
                        content_type="application/pdf",
                        data=fp.read())
 
-        # Usamos la tarea de fondo de SocketIO que es compatible con Render/Eventlet
-        socketio.start_background_task(send_async_email, app, msg)
+        # Iniciar el envío en un hilo separado
+        Thread(target=send_async_email, args=(app, msg)).start()
         
         flash("📩 El proceso de envío ha comenzado. El cliente lo recibirá en breve.", "info")
     except Exception as e:
