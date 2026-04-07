@@ -37,9 +37,19 @@ def detalle(pedido_id):
     pedido = Pedido.query.get_or_404(pedido_id)
     return render_template('admin/pedidos/detalle.html', pedido=pedido)
 
+from threading import Thread
+
+def send_async_email(app, msg):
+    with app.app_context():
+        try:
+            mail.send(msg)
+            print("📩 Correo enviado exitosamente en segundo plano.")
+        except Exception as e:
+            print(f"❌ Error al enviar correo en segundo plano: {e}")
+
 @admin_pedido_bp.route('/enviar-correo/<int:pedido_id>')
 def enviar_factura_por_correo(pedido_id):
-    from models.pedido import Pedido  # si no lo tenés importado ya
+    from models.pedido import Pedido
     pedido = Pedido.query.get_or_404(pedido_id)
 
     if not pedido.usuario.correo or not pedido.factura:
@@ -51,28 +61,33 @@ def enviar_factura_por_correo(pedido_id):
         ruta_pdf = f"static/{archivo_limpio}"
         asunto = f"Factura Pedido #{pedido.id}"
         mensaje = (
-                f"🧾 ¡Hola {pedido.usuario.nombre}!\n\n"
-                f"Gracias por tu compra en nuestra tienda 🛍️.\n\n"
-                f"Adjuntamos tu factura correspondiente al pedido #{pedido.id} en formato PDF 📎.\n"
-                f"Si tenés alguna duda o necesitás más información, no dudes en contactarnos 😊.\n\n"
-                f"Saludos cordiales,\n"
-                f"El equipo de atención"
-            )
+            f"🧾 ¡Hola {pedido.usuario.nombre}!\n\n"
+            f"Gracias por tu compra en nuestra tienda 🛍️.\n\n"
+            f"Adjuntamos tu factura correspondiente al pedido #{pedido.id} en formato PDF 📎.\n"
+            f"Si tenés alguna duda o necesitás más información, no dudes en contactarnos 😊.\n\n"
+            f"Saludos cordiales,\n"
+            f"El equipo de atención"
+        )
 
         msg = Message(subject=asunto,
                       recipients=[pedido.usuario.correo],
                       body=mensaje)
 
-        with current_app.open_resource(ruta_pdf) as fp:
+        # Usamos la app actual para el contexto del hilo
+        app = current_app._get_current_object()
+
+        with app.open_resource(ruta_pdf) as fp:
             msg.attach(filename=f"pedido_{pedido.id}.pdf",
                        content_type="application/pdf",
                        data=fp.read())
 
-        mail.send(msg)
-        flash("📩 Correo enviado correctamente al cliente.", "success")
+        # Iniciar el envío en un hilo separado
+        Thread(target=send_async_email, args=(app, msg)).start()
+        
+        flash("📩 El proceso de envío ha comenzado. El cliente lo recibirá en breve.", "info")
     except Exception as e:
-        print(f"Error al enviar el correo: {e}")
-        flash("❌ Hubo un error al enviar el correo.", "danger")
+        print(f"Error al preparar el correo: {e}")
+        flash("❌ Hubo un error al preparar el correo.", "danger")
 
     return redirect(url_for('admin_pedido.detalle', pedido_id=pedido_id))
 
